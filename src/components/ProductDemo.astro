@@ -1,0 +1,418 @@
+---
+// Interactive hero demo — the Clean Pro booking assistant. Five selectable
+// service tabs (Wash & Fold / Dry Cleaning / Bedding / Ironing / Shoe Care);
+// clicked tabs stay highlighted navy and the chat shows that service's booking
+// thread, typed out message by message.
+
+const tabs = [
+  { key: "wash", title: "Wash & Fold", sub: "Weekly service" },
+  { key: "dry", title: "Dry Cleaning", sub: "Suits & delicates" },
+  { key: "bedding", title: "Bedding", sub: "Duvets & linens" },
+  { key: "ironing", title: "Ironing", sub: "Press & fold" },
+  { key: "shoes", title: "Shoe Care", sub: "Clean & restore" },
+];
+
+const threads = {
+  wash: [
+    { role: "user", text: "I need my weekly laundry picked up tomorrow morning." },
+    {
+      role: "assistant",
+      thought: "One moment…",
+      tool: "Checking pickup windows for your postcode",
+      text: "We have a pickup window tomorrow between 8–10am. Wash & Fold is €1.90/kg with free delivery in 24 hours. Want me to book it?",
+    },
+    { role: "user", text: "Yes please" },
+    {
+      role: "assistant",
+      thought: "Booking your slot",
+      tool: "Reserving a driver and creating your order",
+      text: "All set! Your driver arrives tomorrow between 8–10am. Here's your confirmation.",
+      attachment: {
+        title: "Order #CP-2043 — Wash & Fold",
+        sub: "Pickup tomorrow · 8–10am",
+      },
+    },
+  ],
+  dry: [
+    { role: "user", text: "Can you dry clean two suits and a silk dress?" },
+    {
+      role: "assistant",
+      thought: "One moment…",
+      tool: "Pricing 2 suits and 1 silk dress",
+      text: "Of course — 2 suits and 1 delicate silk dress come to €34. Delicates are hand-finished and every item is inspected before delivery. Pickup today or tomorrow?",
+    },
+    { role: "user", text: "Tomorrow works" },
+    {
+      role: "assistant",
+      thought: "Booking your slot",
+      tool: "Scheduling pickup and adding delicate-care notes",
+      text: "Booked for tomorrow afternoon. We'll return everything pressed and bagged within 48 hours.",
+    },
+  ],
+  bedding: [
+    { role: "user", text: "How much to clean a king duvet and two pillows?" },
+    {
+      role: "assistant",
+      thought: "One moment…",
+      tool: "Checking bedding service rates",
+      text: "A king duvet is €18 and pillows are €6 each — €30 in total, freshly laundered and fluffed. Turnaround is 2 days. Shall I schedule a collection?",
+    },
+    { role: "user", text: "Great, book it" },
+    {
+      role: "assistant",
+      thought: "Booking your slot",
+      tool: "Creating your bedding order",
+      text: "Done — your bedding will be collected Thursday and back to you fresh by the weekend.",
+    },
+  ],
+  ironing: [
+    { role: "user", text: "I just need 10 shirts ironed, nothing washed." },
+    {
+      role: "assistant",
+      thought: "One moment…",
+      tool: "Pricing 10 shirts, iron-only",
+      text: "10 shirts, crisply pressed and hung, is €22. Next-day return if we collect before noon. Want me to arrange a pickup?",
+    },
+    { role: "user", text: "Yes" },
+    {
+      role: "assistant",
+      thought: "Booking your slot",
+      tool: "Reserving a same-day driver",
+      text: "Perfect — a driver is on the way this afternoon and your shirts come back tomorrow, ready to wear.",
+    },
+  ],
+  shoes: [
+    { role: "user", text: "Do you clean white leather sneakers?" },
+    {
+      role: "assistant",
+      thought: "One moment…",
+      tool: "Checking shoe-care service",
+      text: "We do — our restore service deep-cleans and whitens leather sneakers for €19 a pair, including laces. Turnaround is 3 days. Add it to an order?",
+    },
+    { role: "user", text: "Yes, book one pair" },
+    {
+      role: "assistant",
+      thought: "Booking your slot",
+      tool: "Adding sneaker restore to your order",
+      text: "Added! Your sneakers are booked for restore and will come back looking brand new.",
+    },
+  ],
+};
+---
+
+<div data-demo class="flex h-full w-full flex-col bg-white text-left p-2 pb-0">
+  <!-- tab bar -->
+  <div class="grid grid-cols-2 gap-1.5 sm:grid-cols-5 sm:gap-2">
+    {
+      tabs.map((t) => (
+        <button
+          type="button"
+          class="tab flex flex-col items-start rounded-md border border-[#eeeef0] bg-[#fafafa] px-2.5 py-1.5 text-left [&:last-child]:col-span-2 sm:px-3.5 sm:py-2.5 sm:[&:last-child]:col-span-1"
+          data-tab={t.key}
+          aria-selected={t.key === "wash" ? "true" : "false"}
+        >
+          <span class="tab-title text-[11px] font-medium leading-[1.2] text-[#57576d] sm:text-[13px]">{t.title}</span>
+          <span class="tab-sub mt-0.5 text-[10px] leading-[1.3] text-[#878796] sm:text-[11px] sm:leading-[1.35]">{t.sub}</span>
+        </button>
+      ))
+    }
+  </div>
+
+  <!-- chat stage -->
+  <div
+    class="mt-2 flex-1 overflow-hidden rounded-t-[14px] px-2.5 pt-3 sm:px-5 sm:pt-4"
+    style="background-image:linear-gradient(134deg,#eeeef0 36%,#dedee2 100%)"
+  >
+    <div
+      class="mx-auto h-full w-full max-w-[560px] overflow-hidden rounded-t-[14px] px-1 pt-1"
+      style="background:linear-gradient(135deg,#9cc4ef 70%,#37dfbd 100%)"
+    >
+      <div class="chat-scroll h-full w-full overflow-y-auto rounded-t-[11px] bg-white p-3.5 [scrollbar-width:none] sm:p-6 [&::-webkit-scrollbar]:hidden">
+      {
+        Object.entries(threads).map(([key, msgs], i) => (
+          <div class="panel flex flex-col gap-1 sm:gap-2" data-panel={key} hidden={i !== 0}>
+            {msgs.map((m) =>
+              m.role === "user" ? (
+                <div class="msg flex items-center justify-end gap-1.5">
+                  <div class="tw rounded-full bg-[#eeeef0] px-2.5 py-1 text-[9px] font-medium text-[#070715] sm:text-[11px]">
+                    {m.text}
+                  </div>
+                  <img
+                    src="/images/demo-avatar.jpg"
+                    alt=""
+                    aria-hidden="true"
+                    width="20"
+                    height="20"
+                    class="size-5 shrink-0 rounded-full object-cover"
+                  />
+                </div>
+              ) : (
+                <div class="msg w-[400px] max-w-full">
+                  <div class="flex gap-2">
+                    {/* assistant rail: badge → line → dot */}
+                    <div class="flex shrink-0 flex-col items-center self-stretch">
+                      <span class="grid size-[18px] shrink-0 place-items-center rounded-[5px] bg-accent text-white">
+                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                          <path d="M12 3s6 6.4 6 11a6 6 0 0 1-12 0c0-4.6 6-11 6-11Z" fill="currentColor" />
+                        </svg>
+                      </span>
+                      {m.tool && (
+                        <Fragment>
+                          <span class="tool-rail my-0.5 w-px flex-1 bg-[#d6d6e2] transition-opacity duration-500" />
+                          <span class="tool-rail mb-0.5 size-1 shrink-0 rounded-full bg-[#c5c6d8] transition-opacity duration-500" />
+                        </Fragment>
+                      )}
+                    </div>
+                    {/* content */}
+                    <div class="flex flex-1 flex-col gap-1 pt-px sm:gap-2">
+                      <span class="tw text-[9px] font-medium leading-[1.4] text-[#9191a9] sm:text-[12px]">{m.thought}</span>
+                      {m.tool && (
+                        <div class="tool-block">
+                          <div class="overflow-hidden">
+                            <div class="flex flex-col gap-0.5 text-[9px] font-medium leading-[1.4] sm:text-[11px]">
+                              <button type="button" class="tool-toggle w-fit text-left text-[#2e2e4a] transition-colors hover:text-[#070715]">
+                                Details
+                              </button>
+                              <p class="text-[#9191a9]">{m.tool}</p>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  <p class="tw mt-1 pl-[26px] text-[9px] font-medium leading-[1.45] text-[#2e2e4a] sm:mt-2 sm:text-[11px]">{m.text}</p>
+                  {m.attachment && (
+                    <div class="attachment ml-[26px] mt-2 flex w-fit items-center gap-2.5 rounded-[8.089px] border-[0.674px] border-solid border-[#9cc4ef] bg-[#FCFCFC] px-3 py-2">
+                      <span class="grid size-8 shrink-0 place-items-center rounded-md border border-[#eeeef0] text-accent">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                          <path d="M6 2h9l3 3v17a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1Z" />
+                          <path d="M9 8h6M9 12h6M9 16h4" />
+                        </svg>
+                      </span>
+                      <span class="flex flex-col">
+                        <span class="text-[11px] font-semibold leading-[1.3] text-[#070715]">{m.attachment.title}</span>
+                        <span class="text-[10px] leading-[1.3] text-[#9191a9]">{m.attachment.sub}</span>
+                      </span>
+                    </div>
+                  )}
+                </div>
+              )
+            )}
+          </div>
+        ))
+      }
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* Tabs are white by default; the selected tab turns navy. Single-select —
+     selecting another returns the previous one to white. */
+  .tab {
+    cursor: pointer;
+    transition:
+      background-color 0.2s ease,
+      border-color 0.2s ease;
+  }
+  .tab[aria-selected="true"] {
+    background: #1e215e;
+    border-color: #1e215e;
+  }
+  .tab[aria-selected="true"] .tab-title {
+    color: #ffffff;
+  }
+  .tab[aria-selected="true"] .tab-sub {
+    color: #9cc4ef;
+  }
+  .panel[hidden] {
+    display: none;
+  }
+
+  /* Messages are typed in one after another, letter by letter (see script).
+     Each msg fades in as its turn starts. */
+  .msg {
+    opacity: 0;
+    transform: translateY(6px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+  .msg.shown {
+    opacity: 1;
+    transform: none;
+  }
+  /* Attachment card fades in only after its message has finished typing. */
+  .attachment {
+    opacity: 0;
+    transform: translateY(6px);
+    transition: opacity 0.35s ease, transform 0.35s ease;
+  }
+  .attachment.shown {
+    opacity: 1;
+    transform: none;
+  }
+  /* blinking caret on the element currently being typed */
+  .tw.typing::after {
+    content: "";
+    display: inline-block;
+    width: 2px;
+    height: 1em;
+    margin-left: 1px;
+    transform: translateY(2px);
+    background: currentColor;
+    opacity: 0.7;
+    animation: tw-caret 0.8s steps(1) infinite;
+  }
+  @keyframes tw-caret {
+    50% { opacity: 0; }
+  }
+
+  /* Details toggle collapses/expands smoothly on click */
+  .tool-toggle {
+    cursor: pointer;
+  }
+  /* Detail block (label + description) shown by default; one click collapses it */
+  .tool-block {
+    display: grid;
+    grid-template-rows: 1fr;
+    opacity: 1;
+    transition:
+      grid-template-rows 0.45s cubic-bezier(0.45, 0, 0.15, 1),
+      opacity 0.45s ease;
+  }
+  /* After "Details" is clicked: hide the description AND the rail line + dot */
+  .msg.tool-collapsed .tool-block {
+    grid-template-rows: 0fr;
+    opacity: 0;
+  }
+  .msg.tool-collapsed .tool-rail {
+    opacity: 0;
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>("[data-demo]").forEach((demo) => {
+    const tabs = demo.querySelectorAll<HTMLElement>(".tab");
+    const panels = demo.querySelectorAll<HTMLElement>(".panel");
+
+    const CHAR_MS = 14; // typing speed per character
+    const wait = (ms: number) => new Promise((r) => setTimeout(r, ms));
+    let token = 0; // cancels an in-progress play when a new one starts
+
+    // Type one element's text out character by character.
+    const typeEl = (el: HTMLElement, my: number) =>
+      new Promise<void>((resolve) => {
+        const full = el.dataset.full ?? el.textContent ?? "";
+        el.dataset.full = full;
+        el.textContent = "";
+        el.classList.add("typing");
+        let i = 0;
+        const scroller = el.closest<HTMLElement>(".chat-scroll");
+        const tick = () => {
+          if (my !== token) return resolve();
+          el.textContent = full.slice(0, i);
+          // keep the latest typed text in view
+          if (scroller) scroller.scrollTop = scroller.scrollHeight;
+          if (i++ < full.length) {
+            setTimeout(tick, CHAR_MS);
+          } else {
+            el.classList.remove("typing");
+            resolve();
+          }
+        };
+        tick();
+      });
+
+    // Play a panel: reveal each message in turn, typing its text lines.
+    const play = async (panel: HTMLElement) => {
+      const my = ++token;
+      const scroller = panel.closest<HTMLElement>(".chat-scroll");
+      if (scroller) scroller.scrollTop = 0;
+      const msgs = Array.from(panel.querySelectorAll<HTMLElement>(".msg"));
+      // reset everything to a clean, hidden state
+      msgs.forEach((m) => {
+        m.classList.remove("shown");
+        m.querySelector<HTMLElement>(".attachment")?.classList.remove("shown");
+        m.querySelectorAll<HTMLElement>(".tw").forEach((t) => {
+          t.dataset.full = t.dataset.full ?? t.textContent ?? "";
+          t.textContent = "";
+          t.classList.remove("typing");
+        });
+      });
+
+      for (const msg of msgs) {
+        if (my !== token) return false;
+        msg.classList.add("shown");
+        await wait(220);
+        const lines = Array.from(msg.querySelectorAll<HTMLElement>(".tw"));
+        for (const line of lines) {
+          if (my !== token) return false;
+          await typeEl(line, my);
+          await wait(140);
+        }
+        // Reveal the attachment card only once all text in this message is typed.
+        const att = msg.querySelector<HTMLElement>(".attachment");
+        if (att) {
+          await wait(160);
+          if (my !== token) return false;
+          att.classList.add("shown");
+        }
+        await wait(260);
+      }
+      return my === token; // true only if this play ran fully without being superseded
+    };
+
+    // Tab order, for auto-advancing to the next one.
+    const tabKeys = Array.from(tabs).map((t) => t.dataset.tab);
+    const HOLD_MS = 3000; // pause after the chat finishes typing, before the next tab
+
+    // Type out a panel, then (if not interrupted) wait and move to the next tab.
+    const runAndAdvance = async (key: string | undefined, panel: HTMLElement) => {
+      const completed = await play(panel);
+      if (!completed) return; // a manual click / another tab took over
+      const myToken = token;
+      await wait(HOLD_MS);
+      if (token !== myToken) return; // the user interacted during the hold
+      const idx = tabKeys.indexOf(key);
+      show(tabKeys[(idx + 1) % tabKeys.length]);
+    };
+
+    const show = (key: string | undefined) => {
+      tabs.forEach((t) => t.setAttribute("aria-selected", String(t.dataset.tab === key)));
+      let activePanel: HTMLElement | null = null;
+      panels.forEach((p) => {
+        const active = p.dataset.panel === key;
+        p.hidden = !active;
+        if (active) activePanel = p;
+      });
+      if (activePanel) runAndAdvance(key, activePanel);
+    };
+
+    tabs.forEach((tab) => tab.addEventListener("click", () => show(tab.dataset.tab)));
+
+    // Click "Details" to collapse/expand its description (slide animation)
+    demo.querySelectorAll<HTMLElement>(".tool-toggle").forEach((btn) => {
+      // One-way: clicking "Details" collapses the block; refresh to restore.
+      btn.addEventListener("click", () => {
+        btn.closest<HTMLElement>(".msg")?.classList.add("tool-collapsed");
+      });
+    });
+
+    // Play the initially-visible panel once it scrolls into view, then start
+    // the auto-advance loop (type → wait → next tab → …).
+    const first = Array.from(panels).find((p) => !p.hidden);
+    if (first) {
+      const io = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) {
+              runAndAdvance(first.dataset.panel, first);
+              io.disconnect();
+            }
+          });
+        },
+        { threshold: 0.25 }
+      );
+      io.observe(first);
+    }
+  });
+</script>

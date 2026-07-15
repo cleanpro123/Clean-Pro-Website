@@ -1,0 +1,223 @@
+---
+// Contact — Figma footer/content (249:25139): topic pills (purple outline),
+// question rows, contact-data inputs + Send message on the left; a bordered
+// contact card with copy-pills, address and mint social badges on the right.
+// Compact sizing + a soft Figma "shine" glow on the dark background.
+const topics = ["Wash & Fold", "Dry Cleaning", "Bedding & Linens", "Ironing", "Business accounts"];
+const questions = [
+  "How does pickup and delivery work?",
+  "What's the turnaround time in my area?",
+  "Do you offer a weekly subscription?",
+  "Can you handle delicate or specialist items?",
+];
+const socials = [
+ // { name: "TikTok", d: "M16 8.2a5 5 0 0 0 4 2v2.4a7.3 7.3 0 0 1-4-1.2V16a5 5 0 1 1-5-5v2.5a2.5 2.5 0 1 0 2.5 2.5V4H16Z" },
+  //{ name: "Instagram", d: "M7 3h10a4 4 0 0 1 4 4v10a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V7a4 4 0 0 1 4-4Zm5 5a4 4 0 1 0 0 8 4 4 0 0 0 0-8Zm5-1h.01" },
+  { name: "LinkedIn", d: "M4 8h3v12H4zM5.5 3.5A1.75 1.75 0 1 0 5.5 7 1.75 1.75 0 0 0 5.5 3.5ZM10 8h3v1.7c.5-.9 1.7-1.9 3.5-1.9 3 0 4 2 4 4.7V20h-3v-6c0-1.4-.5-2.4-1.8-2.4S13 12.6 13 14v6h-3z" ,link:"https://www.linkedin.com/"},
+ // { name: "YouTube", d: "M22 12s0-3.2-.4-4.6a2.5 2.5 0 0 0-1.8-1.8C18.4 5.2 12 5.2 12 5.2s-6.4 0-7.8.4A2.5 2.5 0 0 0 2.4 7.4C2 8.8 2 12 2 12s0 3.2.4 4.6a2.5 2.5 0 0 0 1.8 1.8c1.4.4 7.8.4 7.8.4s6.4 0 7.8-.4a2.5 2.5 0 0 0 1.8-1.8C22 15.2 22 12 22 12Zm-12 3V9l5 3Z" },
+ // { name: "WhatsApp", d: "M12 2a10 10 0 0 0-8.7 15l-1.3 4.7 4.8-1.3A10 10 0 1 0 12 2Zm5.4 14c-.2.6-1.3 1.2-1.8 1.2s-1.2.2-3.7-1S7.3 12.6 7.1 12.3s-1-1.4-1-2.6S6.7 8 7 7.7s.6-.4.8-.4h.6c.2 0 .4 0 .6.5l.8 2c0 .2 0 .4-.1.5l-.4.5c-.2.2-.3.4-.1.7s.6 1 1.3 1.6c.9.8 1.6 1 1.9 1.2s.4 0 .6-.1l.8-1c.2-.2.4-.2.6-.1l1.9.9c.2 0 .4.2.4.4Z" },
+];
+const inputClass =
+  "w-full rounded-full border border-signal-400 bg-[#0a0c22] px-5 py-2.5 text-[13px] text-white placeholder:text-signal-300 focus:border-accent focus:outline-none";
+
+// Web3Forms access key — submissions are emailed to the address this key was
+// created for (nihal@peweo.com). The key is public by design (it ships in the
+// client HTML); the env var just lets it be swapped without a code change. remove after
+const WEB3FORMS_KEY = import.meta.env.PUBLIC_WEB3FORMS_KEY  ; 
+---
+
+<section id="contact" class="relative overflow-hidden bg-ink-deep px-6 pt-24 pb-6 sm:pt-32 lg:pt-40">
+  <!-- soft shine glow (Figma) -->
+  <div
+    aria-hidden="true"
+    class="pointer-events-none absolute inset-x-0 top-1/3 mx-auto h-[320px] max-w-3xl rounded-full opacity-50 blur-[130px]"
+    style="background:radial-gradient(ellipse at center, rgba(82,86,163,0.35), rgba(55,223,189,0.08) 50%, transparent 75%)"
+  ></div>
+
+  <div class="relative mx-auto max-w-[940px]">
+    <p class="reveal mb-6 text-center text-[11px] font-medium uppercase tracking-[0.4em] text-lav-200">
+      Contact
+    </p>
+
+    <div class="grid grid-cols-1 gap-5 lg:grid-cols-[1fr_280px]">
+      <!-- Form -->
+      <form id="contact-form" class="reveal flex flex-col gap-5">
+        <!-- Web3Forms config (delivers to nihal@peweo.com via the access key) -->
+        <input type="hidden" name="access_key" value={WEB3FORMS_KEY} />
+        <input type="hidden" name="subject" value="New Clean Pro contact form submission" />
+        <input type="hidden" name="from_name" value="Clean Pro website" />
+        <!-- honeypot: bots fill this, humans never see it -->
+        <input type="checkbox" name="botcheck" tabindex="-1" autocomplete="off" class="hidden" style="display:none" aria-hidden="true" />
+
+        <!-- Contact data -->
+        <div class="space-y-4">
+          <p class="text-[15px] text-signal-50">Your contact data</p>
+          <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <label class="block space-y-2">
+              <span class="block text-[13px] font-medium text-signal-200">Your name</span>
+              <input type="text" name="name" required placeholder="Enter your name" class={inputClass} />
+            </label>
+            <label class="block space-y-2">
+              <span class="block text-[13px] font-medium text-signal-200">Your email</span>
+              <input type="email" name="email" required placeholder="Enter your email" class={inputClass} />
+            </label>
+          </div>
+          <!-- Your message — big textarea, shown by default -->
+          <label id="field-message" class="block space-y-2">
+            <span class="block text-[13px] font-medium text-signal-200">Your message</span>
+            <div class="relative rounded-[26px] border border-signal-400 bg-[#0a0c22] px-5 py-3.5">
+              <span class="pointer-events-none absolute left-5 top-3.5 text-[15px] leading-none text-signal-300">+</span>
+              <textarea name="message" required rows="5" maxlength="250" placeholder="Max. 250 characters" class="w-full resize-none bg-transparent pl-6 text-[13px] text-white placeholder:text-signal-300 focus:outline-none"></textarea>
+            </div>
+          </label>
+
+          <!-- Your phone number — hidden by default, shown via toggle -->
+          <label id="field-phone" class="hidden space-y-2">
+            <span class="block text-[13px] font-medium text-signal-200">Your phone number</span>
+            <input type="tel" name="phone" placeholder="Enter your phone number" class={inputClass} />
+          </label>
+
+          <div class="flex flex-wrap gap-5 px-3 pt-3 text-[13px] text-lav-400">
+            <button type="button" data-toggle="field-phone" class="inline-flex items-center gap-2 transition hover:text-white">
+              <span class="toggle-icon grid h-5 w-5 place-items-center rounded-full border border-current leading-none">+</span>
+              Phone (optional)
+            </button>
+          
+          </div>
+        </div>
+
+        <div class="flex items-center justify-end gap-4">
+          <p id="form-status" role="status" aria-live="polite" class="hidden text-[13px]"></p>
+          <button
+            type="submit"
+            class="inline-flex w-fit items-center gap-2 self-end rounded-full bg-accent px-5 py-2.5 text-[13px] font-medium text-white transition hover:bg-accent-hover disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            <span class="btn-label">Send message</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4Z"/></svg>
+          </button>
+        </div>
+      </form>
+
+      <!-- Contact card -->
+      <aside class="reveal h-fit space-y-5 rounded-2xl border border-ink bg-[#09091c] p-4">
+        <div class="space-y-2">
+          <button type="button" data-copy="hello@cleanpro.com" class="copy-pill flex w-full items-center justify-center gap-2 rounded-full bg-ink px-4 py-2 text-[12px] font-medium text-cloud-400 transition hover:text-white">
+            <span class="copy-label">hello@cleanpro.com</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
+          </button>
+          <button type="button" data-copy="+1 (800) 555-0142" class="copy-pill flex w-full items-center justify-center gap-2 rounded-full bg-ink px-4 py-2 text-[12px] font-medium text-cloud-400 transition sm:items-center hover:text-white">
+            <span class="copy-label">+1 (800) 555-0142</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
+          </button>
+        </div>
+
+        <p class="text-[14px] font-medium leading-6 text-lav-200">
+          Clean Pro Laundry Co.<br />
+          128 Riverside Avenue<br />
+          Downtown District<br />
+          Open 7 days · 7am–9pm
+        </p>
+
+        <div class="space-y-2.5">
+          <p class="text-[13px] text-lav-200">See more about us:</p>
+          <div class="flex gap-2">
+            {
+              socials.map((s) => (
+                <a
+                  href={s.link}
+                  aria-label={s.name}
+                  class="grid h-9 w-9 place-items-center rounded-full text-mint transition hover:brightness-125"
+                  style="background:linear-gradient(45deg, rgba(55,223,189,0) 0%, rgba(55,223,189,0.12) 100%)"
+                >
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d={s.d}/></svg>
+                </a>
+              ))
+            }
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<script>
+  // "Phone (optional)" / "Message (optional)" toggle their fields.
+  // Both fields are shown by default (icon "−"); hiding swaps it to "+".
+  document.querySelectorAll<HTMLElement>("[data-toggle]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const field = document.getElementById(btn.dataset.toggle!);
+      const icon = btn.querySelector(".toggle-icon");
+      if (!field || !icon) return;
+      const hidden = field.classList.toggle("hidden");
+      icon.textContent = hidden ? "+" : "−";
+    });
+  });
+
+  // Copy email / phone to clipboard on click (no label change).
+  document.querySelectorAll<HTMLElement>(".copy-pill").forEach((btn) => {
+    btn.addEventListener("click", async () => {
+      const value = btn.dataset.copy;
+      if (!value) return;
+      try {
+        await navigator.clipboard.writeText(value);
+      } catch {
+        // fallback for non-secure contexts
+        const ta = document.createElement("textarea");
+        ta.value = value;
+        ta.style.position = "fixed";
+        ta.style.opacity = "0";
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand("copy");
+        ta.remove();
+      }
+    });
+  });
+
+  // Contact form — POST submissions to Web3Forms, which emails them to the
+  // address tied to the access key (nihal@peweo.com). Stays on-page with an
+  // inline status message instead of a redirect.
+  const form = document.getElementById("contact-form") as HTMLFormElement | null;
+  const status = document.getElementById("form-status");
+  if (form && status) {
+    const label = form.querySelector<HTMLElement>(".btn-label");
+    const submitBtn = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+    const defaultLabel = label?.textContent ?? "Send message";
+
+    const setStatus = (msg: string, ok: boolean) => {
+      status.textContent = msg;
+      status.classList.remove("hidden");
+      status.classList.toggle("text-mint", ok);
+      status.classList.toggle("text-red-400", !ok);
+    };
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      if (submitBtn) submitBtn.disabled = true;
+      if (label) label.textContent = "Sending…";
+      status.classList.add("hidden");
+
+      try {
+        const res = await fetch(import.meta.env.PUBLIC_WEB3FORMS_ENDPOINT, {
+          method: "POST",
+          headers: { Accept: "application/json" },
+          body: new FormData(form),
+        });
+        const data = await res.json();
+        if (res.ok && data.success) {
+          form.reset();
+          setStatus("Thanks — your message has been sent.", true);
+        } else {
+          setStatus(data.message || "Something went wrong. Please try again.", false);
+        }
+      } catch {
+        setStatus("Network error. Please try again.", false);
+      } finally {
+        if (submitBtn) submitBtn.disabled = false;
+        if (label) label.textContent = defaultLabel;
+      }
+    });
+  }
+</script>
+
+ 

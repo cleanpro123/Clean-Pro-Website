@@ -1,0 +1,29 @@
+---
+interface Props {
+  variant?: "dark" | "light";
+  class?: string;
+}
+const { variant = "dark", class: className = "" } = Astro.props;
+const textColor = variant === "light" ? "text-white" : "text-ink";
+---
+
+<a href="/" class={`inline-flex items-center gap-2 ${className}`}>
+  <span class="grid size-7 place-items-center rounded-[9px] bg-accent text-white shadow-[0_4px_12px_rgba(31,143,224,0.35)]">
+    <!-- water drop / fresh mark -->
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path
+        d="M12 3s6 6.4 6 11a6 6 0 0 1-12 0c0-4.6 6-11 6-11Z"
+        fill="currentColor"
+      />
+      <path
+        d="M9.5 13.5a2.5 2.5 0 0 0 2.5 2.5"
+        stroke="#1f8fe0"
+        stroke-width="1.6"
+        stroke-linecap="round"
+      />
+    </svg>
+  </span>
+  <span class={`font-display text-xl font-semibold tracking-tight ${textColor}`}
+    >Clean&nbsp;Pro</span
+  >
+</a>

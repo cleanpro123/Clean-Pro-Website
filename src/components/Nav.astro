@@ -1,0 +1,37 @@
+---
+import Logo from "./Logo.astro";
+ 
+---
+
+<header
+  id="site-header"
+  class="fixed inset-x-0 top-0 z-50 px-4 pt-3.5 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] sm:pt-4"
+>
+  <nav
+    id="site-nav"
+    class="relative mx-auto flex max-w-[770px] items-center justify-between gap-4 rounded-full border-[0.5px] border-white/30 bg-white/70 py-1.5 pl-5 pr-2 font-geist shadow-[0_9px_30px_rgba(26,29,78,0.12)] backdrop-blur-2xl transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]"
+  >
+    <Logo />
+
+    <div class="flex items-center gap-2 md:gap-5">
+      <nav class="hidden items-center gap-6 font-geist text-sm font-medium text-navy/80 md:flex">
+        <a href="#services" class="transition-colors hover:text-navy">Services</a>
+        <a href="#how" class="transition-colors hover:text-navy">How it works</a>
+        <a href="#faq" class="transition-colors hover:text-navy">FAQ</a>
+      </nav>
+
+      <div class="flex items-center gap-1">
+        <a
+          href="#contact"
+          class="rounded-full bg-navy px-4 py-1.5 text-sm font-medium text-white transition-colors hover:bg-navy-700"
+        >
+          Book a pickup
+        </a>
+      </div>
+    </div>
+  </nav>
+</header>
+
+ 
+
+ 

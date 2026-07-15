@@ -1,0 +1,78 @@
+---
+// Hero — fixed navbar + dark "deep water" background with an interactive
+// Antigravity particle field (React Three Fiber) that follows the cursor, the
+// headline + Schedule pickup CTA, and the Clean Pro booking-assistant demo
+// clipped at the fold as a teaser.
+import ProductDemo from "./ProductDemo.astro";
+import Antigravity from "./Antigravity.jsx";
+---
+
+<section
+  id="top"
+  class="relative flex h-svh max-h-[820px] min-h-[560px] flex-col overflow-hidden bg-[#070c1e]"
+>
+  <!-- Dark base with a soft top glow so the particles read clearly -->
+  <div
+    class="absolute inset-0"
+    aria-hidden="true"
+    style="background:radial-gradient(120% 95% at 50% 0%,#1c3f82 0%,#102450 42%,#0a132e 72%,#070c1e 100%)"
+  ></div>
+
+  <!-- Interactive Antigravity particle field — reacts to the cursor on hover -->
+  <div class="absolute inset-0 z-[1]" aria-hidden="true">
+    <Antigravity
+      client:only="react"
+      count={320}
+      magnetRadius={6}
+      ringRadius={7}
+      waveSpeed={0.4}
+      waveAmplitude={1}
+      particleSize={1.6}
+      lerpSpeed={0.05}
+      color="#6db2ff"
+      autoAnimate
+      particleVariance={1}
+      rotationSpeed={0}
+      depthFactor={1}
+      pulseSpeed={3}
+      particleShape="capsule"
+      fieldStrength={10}
+    />
+  </div>
+
+  <!-- Headline block — pointer-events-none so cursor moves reach the particle
+       canvas; the CTA re-enables pointer events so it stays clickable. -->
+  <div class="pointer-events-none relative z-[2] my-auto px-5 pt-16 text-center">
+    <h1
+      class="reveal mx-auto max-w-[720px] text-balance font-display text-[clamp(1.5rem,3.4vw,2.35rem)] font-semibold leading-[1.12] tracking-[-0.02em] text-white [text-shadow:0_2px_28px_rgba(7,12,30,0.7)]"
+    >
+      Fresh, clean laundry — picked up and<br />delivered right to your door
+    </h1>
+
+    <div
+      class="reveal mt-5 flex flex-wrap items-center justify-center gap-x-5 gap-y-1 font-geist text-[14px] font-normal text-white/90"
+      style="animation-delay:.06s"
+    >
+      <span>Free pickup &amp; delivery</span>
+      <span>24-hour turnaround</span>
+      <span>Eco-friendly cleaning</span>
+    </div>
+
+    <a
+      href="#contact"
+      class="reveal pointer-events-auto mt-8 inline-flex items-center justify-center rounded-full bg-accent px-6 py-2.5 text-[13px] font-medium text-white shadow-[0_10px_30px_rgba(31,143,224,0.4)] transition-colors hover:bg-accent-hover"
+      style="animation-delay:.1s"
+    >
+      Schedule a pickup
+    </a>
+  </div>
+
+  <div class="relative z-[2] flex shrink-0 items-end justify-center px-5 pt-4">
+    <div
+      class="reveal h-[57vh] max-h-[480px] w-full max-w-[925px] overflow-hidden rounded-t-[14px] shadow-[0_-20px_60px_rgba(7,12,30,0.6)]"
+      style="animation-delay:.16s"
+    >
+      <ProductDemo />
+    </div>
+  </div>
+</section>

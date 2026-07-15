@@ -1,0 +1,85 @@
+---
+import Logo from "./Logo.astro";
+
+
+const badges = [
+  { title: "Fully insured service", sub: "Every order tracked & protected", icon: "/images/foot-1.svg" },
+  { title: "Serving 50+ neighborhoods", sub: "Same-day pickup slots", icon: "/images/foot-2.svg" },
+  { title: "Eco-friendly cleaning", sub: "Plant-based, low-energy", icon: "/images/foot-3.svg" },
+];
+---
+
+<footer class="relative overflow-hidden bg-ink-deep text-lav-200">
+  <!-- Dotted world map — hemispheres slide closer only when hovering over the map area -->
+  <div class="group relative my-12 h-[150px] w-full overflow-hidden sm:my-28 sm:h-[400px] lg:my-40 lg:h-[466px]">
+    <img
+      src="/images/world-map-left.svg"
+      alt=""
+      aria-hidden="true"
+      class="map-half map-left absolute left-[-40px] top-0 h-auto w-[40%] max-w-[746px] object-contain"
+    />
+    <img
+      src="/images/world-map-right.svg"
+      alt=""
+      aria-hidden="true"
+      class="map-half map-right absolute right-[-40px] top-[38px] h-auto w-[47%] max-w-[864px] object-contain"
+    />
+  </div>
+
+  <div class="mx-auto max-w-6xl px-6 pb-10">
+    <!-- logo pill + scroll-to-top -->
+    <div class="flex items-center justify-between gap-4 rounded-full   bg-white/[0.02] py-4 pl-8 pr-4"  >
+      <Logo variant="light" />
+      <a href="#top" aria-label="Back to top" class="grid size-12 place-items-center rounded-full bg-[#41459b] text-white transition hover:bg-[#4d52b8]">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+      </a>
+    </div>
+
+    <!-- security highlights -->
+    <div class="mt-12 space-y-5">
+      {
+        badges.map((b) => (
+          <div class="flex items-center gap-4 pl-6">
+            <img src={b.icon} alt="" aria-hidden="true" width="20" height="20" class="size-8 shrink-0" />
+            <div class="leading-snug">
+              <p class="text-[12px] font-medium text-signal-100">{b.title}</p>
+              {b.sub && <p class="text-[12px] text-signal-300">{b.sub}</p>}
+            </div>
+          </div>
+        ))
+      }
+     </div>
+
+    <!-- Divider -->
+    <div class="mt-12 border-t border-white/20"></div>
+
+    <!-- Footer bottom bar -->
+    <div class="flex flex-col items-center justify-between gap-5 py-6 text-[12px] text-white/60 sm:flex-row">
+      <!-- Left -->
+      <p class="text-[12px] whitespace-nowrap">© 2026 Clean Pro Laundry Co.</p>
+
+      <!-- Right -->
+      <nav class="flex flex-wrap items-center gap-5 text-[11px]">
+        <a href="/imprint" class="transition-colors duration-200 hover:text-white">Imprint</a> 
+      </nav>
+    </div>
+  </div>
+</footer>
+
+<style>
+  /* Dotted world map — hemispheres slide toward each other while hovering the map area */
+  .map-half {
+    transition: transform 1200ms ease-in-out;
+  }
+  .group:hover .map-left {
+    transform: translateX(34px);
+  }
+  .group:hover .map-right {
+    transform: translateX(-34px);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .map-half {
+      transition: none;
+    }
+  }
+</style>

@@ -1,0 +1,22 @@
+---
+// Trust strip — key proof points in a centred row beneath the hero.
+const stats = [
+  { value: "4.9★", label: "Average rating" },
+  { value: "50,000+", label: "Orders delivered" },
+  { value: "24 hrs", label: "Typical turnaround" },
+  { value: "100%", label: "Eco-friendly cleaning" },
+];
+---
+
+<section class="bg-white py-8 sm:py-10">
+  <div class="mx-auto flex max-w-5xl flex-wrap items-stretch justify-center gap-2 px-6 sm:flex-nowrap sm:gap-3">
+    {
+      stats.map((s) => (
+        <div class="flex min-w-[140px] flex-1 flex-col items-center justify-center gap-0.5 rounded-[10px] border border-[#e6e6ec] bg-white px-4 py-4 text-center">
+          <span class="font-display text-[22px] font-semibold text-navy sm:text-[26px]">{s.value}</span>
+          <span class="text-[12px] font-medium text-cloud-500">{s.label}</span>
+        </div>
+      ))
+    }
+  </div>
+</section>

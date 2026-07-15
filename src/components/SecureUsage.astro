@@ -1,0 +1,87 @@
+---
+// "The Clean Pro promise" — dark section, text-only cards (no imagery).
+const topCards = [
+  {
+    title: "Free collection & delivery",
+    body: "Doorstep pickup and return at no extra cost, seven days a week — including evenings.",
+  },
+  {
+    title: "Live order tracking",
+    body: "Follow every order from pickup to delivery, with text updates at each step.",
+  },
+  {
+    title: "Satisfaction guaranteed",
+    body: "Not happy with a result? We'll re-clean it free, no questions asked.",
+  },
+];
+
+const bottomCards = [
+  {
+    title: "Trusted specialists",
+    body: "Trained, background-checked cleaners who treat your clothes like their own.",
+  },
+  {
+    title: "Flexible plans",
+    body: "One-off orders or a weekly subscription — pause, skip or cancel anytime.",
+  },
+  {
+    title: "Card-free payment",
+    body: "Save your card once and check out in a tap. No cash, no fuss at the door.",
+  },
+];
+---
+
+<section class="bg-[#070715] py-14 sm:py-20">
+  <div class="mx-auto max-w-[1488px] p-6">
+    <!-- header -->
+    <div class="reveal mb-9 sm:mb-14">
+      <span class="inline-flex rounded-full border-[0.5px] border-white/15 bg-white/[0.04] px-3 py-1.5 text-[12px] font-medium text-[#b7b7c0]">
+        The Clean Pro promise
+      </span>
+      <h2 class="mt-3 max-w-2xl font-display text-[clamp(1.4rem,2.7vw,1.95rem)] font-normal leading-tight tracking-[-0.02em] text-white">
+        Cleaner clothes, a whole lot less hassle
+      </h2>
+    </div>
+
+    <!-- row 1 -->
+    <div class="reveal grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {
+        topCards.map((c) => (
+          <article class="flex flex-col rounded-[20px] border-[0.5px] border-white/15 bg-gradient-to-b from-white/[0.07] to-white/[0.015] p-6">
+            <h3 class="text-[16px] font-medium text-white">{c.title}</h3>
+            <p class="mt-2.5 text-[13px] leading-[1.5] text-[#9a9ab8]">{c.body}</p>
+          </article>
+        ))
+      }
+    </div>
+
+    <!-- eco wide card -->
+    <div class="reveal mt-4 grid grid-cols-1 items-center gap-6 rounded-[20px] border-[0.5px] border-white/15 bg-gradient-to-b from-white/[0.07] to-white/[0.015] p-6 lg:grid-cols-[1fr_auto]">
+      <div>
+        <h3 class="text-[16px] font-medium text-white">Eco-friendly by default</h3>
+        <p class="mt-2.5 max-w-xl text-[13px] leading-[1.5] text-[#9a9ab8]">
+          We use plant-based, biodegradable detergents, reusable garment bags and
+          energy-efficient machines — a genuinely fresh clean that's gentle on the
+          planet as well as your fabrics.
+        </p>
+      </div>
+      <div class="flex flex-wrap gap-2">
+        <span class="rounded-full border-[0.5px] border-white/15 bg-white/[0.04] px-3 py-1.5 text-[12px] font-medium text-mint">Plant-based</span>
+        <span class="rounded-full border-[0.5px] border-white/15 bg-white/[0.04] px-3 py-1.5 text-[12px] font-medium text-mint">Reusable bags</span>
+        <span class="rounded-full border-[0.5px] border-white/15 bg-white/[0.04] px-3 py-1.5 text-[12px] font-medium text-mint">Low-energy</span>
+      </div>
+    </div>
+
+    <!-- row 2 -->
+    <div class="reveal mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {
+        bottomCards.map((c) => (
+          <article class="flex flex-col rounded-[20px] border-[0.5px] border-white/15 bg-gradient-to-b from-white/[0.07] to-white/[0.015] p-5">
+            <h3 class="text-[16px] font-medium text-white">{c.title}</h3>
+            <p class="mt-2.5 text-[13px] leading-[1.5] text-[#9a9ab8]">{c.body}</p>
+          </article>
+        ))
+      }
+    </div>
+  </div>
+</section>

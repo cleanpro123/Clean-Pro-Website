@@ -1,0 +1,143 @@
+---
+const items = [
+  {
+    n: "01",
+    title: "Schedule a pickup",
+    body: "Book online in under a minute. Pick a collection window that fits your day — mornings, evenings or weekends.",
+  },
+  {
+    n: "02",
+    title: "We collect your bags",
+    body: "A friendly Clean Pro driver arrives at your door, no bags or containers needed — just hand it over.",
+  },
+  {
+    n: "03",
+    title: "Expert cleaning & care",
+    body: "Your items are sorted, washed, dried and pressed by trained specialists using gentle, eco-friendly products.",
+  },
+  {
+    n: "04",
+    title: "Delivered fresh",
+    body: "Everything comes back neatly folded or hung — usually within 24 hours, always spotless.",
+  },
+];
+---
+
+<section id="how" class="bg-lav-50/60 py-8 sm:py-12">
+  <div class="mx-auto max-w-[980px] px-6">
+    <!-- header -->
+    <div class="reveal mb-8 flex flex-col items-start gap-2 sm:mb-[52px]">
+      <span class="inline-flex items-center rounded-[40px] bg-[#eeeef0] px-3.5 py-1.5 text-[12px] font-medium text-[#0d0f29]">
+        Simple by design
+      </span>
+      <h2 class="font-display text-[clamp(1.25rem,2.4vw,1.7rem)] font-normal leading-tight tracking-[-0.03em] text-[#0d0f29]">
+        Laundry day, done in four easy steps
+      </h2>
+    </div>
+
+    <!-- content -->
+    <div id="admin-control" class="reveal flex flex-col gap-5 lg:flex-row lg:items-stretch lg:gap-5">
+      <!-- left: auto-playing tab list -->
+      <div class="flex w-full flex-col gap-2 lg:w-[44%]">
+        {
+          items.map((it, i) => (
+            <button
+              type="button"
+              class="admin-tab group relative overflow-hidden rounded-lg border border-[#dedee2] bg-[#eeeef0] px-5 pb-6 pt-5 text-left transition-[border-radius,background-color]"
+              data-index={i}
+            >
+              <p class="text-[14px] font-medium text-[#2a2c46]">
+                {it.n} <span class="text-[#9a9ab0]">//</span> {it.title}
+              </p>
+              <div class="admin-body-wrap">
+                <div class="overflow-hidden">
+                  <p class="mt-2 text-[12.5px] leading-[1.5] text-[#848494]">{it.body}</p>
+                </div>
+              </div>
+              <span class="admin-progress absolute bottom-0 left-0 h-[3px] w-0 bg-accent" />
+            </button>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* Body description smoothly expands only for the active tab */
+  .admin-body-wrap {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.5s cubic-bezier(0.45, 0, 0.15, 1);
+  }
+  .admin-tab.is-active {
+    background: #f6f6f8;
+  }
+  .admin-tab.is-active .admin-body-wrap {
+    grid-template-rows: 1fr;
+  }
+  /* Preview crossfade — like switching scenes in a video */
+  .admin-preview {
+    opacity: 0;
+    transform: translateY(8px);
+    pointer-events: none;
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+  .admin-preview.is-active {
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+  }
+</style>
+
+<script>
+  // Auto-playing tabs: each is active for 6s, fills an orange progress bar,
+  // then advances. Clicking a tab jumps to it and restarts the cycle.
+  const root = document.getElementById("admin-control");
+  if (root) {
+    const DURATION = 6000;
+    const tabs = Array.from(root.querySelectorAll<HTMLElement>(".admin-tab"));
+    let current = -1;
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    let progress: Animation | null = null;
+
+    const activate = (i: number) => {
+      current = i;
+      tabs.forEach((t, idx) => {
+        t.classList.toggle("is-active", idx === i);
+        const bar = t.querySelector<HTMLElement>(".admin-progress");
+        if (bar) bar.style.width = "0%";
+      });
+      // fill the orange progress bar over the 6s window
+      const bar = tabs[i].querySelector<HTMLElement>(".admin-progress");
+      progress?.cancel();
+      if (bar) {
+        progress = bar.animate(
+          [{ width: "0%" }, { width: "100%" }],
+          { duration: DURATION, easing: "linear", fill: "forwards" }
+        );
+      }
+
+      clearTimeout(timer);
+      timer = setTimeout(() => activate((i + 1) % tabs.length), DURATION);
+    };
+
+    tabs.forEach((t, i) => t.addEventListener("click", () => activate(i)));
+
+    // pause while the user hovers, resume on leave
+    root.addEventListener("mouseenter", () => {
+      clearTimeout(timer);
+      progress?.pause();
+    });
+    root.addEventListener("mouseleave", () => {
+      progress?.play();
+      const remaining = progress
+        ? DURATION - (Number(progress.currentTime) || 0)
+        : DURATION;
+      clearTimeout(timer);
+      timer = setTimeout(() => activate((current + 1) % tabs.length), Math.max(0, remaining));
+    });
+
+    activate(0);
+  }
+</script>

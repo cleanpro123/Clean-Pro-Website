@@ -1,0 +1,165 @@
+@import "tailwindcss";
+
+@theme {
+  /* ── Clean Pro brand palette (fresh laundry blues, navy, mint) ── */
+
+  /* Signal Void (near-black ink) */
+  --color-ink: #0d0f29;        /* Signal Void 600 (Main) */
+  --color-ink-soft: #32344d;   /* Signal Void 500 */
+  --color-ink-deep: #070715;   /* Signal Void 900 */
+  --color-signal-50: #e7e7ea;
+  --color-signal-100: #b7b7c0;
+  --color-signal-200: #878796;
+  --color-signal-300: #57576d;
+  --color-signal-400: #32344d;
+  --color-signal-900: #070715;
+
+  /* Deep Nexus (indigo / navy + lavender ramp) */
+  --color-navy: #1e215e;       /* Deep Nexus 500 */
+  --color-navy-700: #1b1e55;   /* Deep Nexus 600 */
+  --color-nexus: #201f5e;      /* Deep Nexus (brand) */
+  --color-nexus-700: #171946;
+  --color-nexus-800: #121438;
+  --color-nexus-900: #0d0f2a;
+
+  --color-lav-50: #f4f4fb;
+  --color-lav-100: #e9e9f6;
+  --color-lav-200: #d6d6ec;    /* Deep Nexus 50 */
+  --color-lav-300: #aaacd4;    /* Deep Nexus 100 */
+  --color-lav-400: #7e80bb;    /* Deep Nexus 200 */
+  --color-lav-500: #5256a3;    /* Deep Nexus 300 */
+
+  /* Clean Pro accent — fresh laundry blue */
+  --color-accent: #1f8fe0;
+  --color-accent-hover: #1878bd;
+
+  /* Synth Mint */
+  --color-mint: #37dfbd;       /* Synth Mint 500 (Main) */
+  --color-mint-400: #58e3c7;
+  --color-mint-300: #75e8d1;
+
+  /* Data Cloud (cool greys / surfaces) */
+  --color-cloud-50: #fafafa;
+  --color-cloud-100: #eeeef0;
+  --color-cloud-200: #dedee2;
+  --color-cloud-300: #cbcbd1;
+  --color-cloud-400: #a8a8b3;
+  --color-cloud-500: #848494;
+  --color-cloud-600: #616175;
+  --color-cloud-700: #43435b;
+  --color-cloud-900: #1a1c38;
+
+  /* Base (Onest text greys) */
+  --color-base-100: #e4e4f0;
+  --color-base-400: #9191a9;
+  --color-base-500: #6f6f8f;
+  --color-base-600: #5a5a80;
+  --color-base-800: #2e2e4a;
+  --color-base-900: #1a1a2f;
+
+  --color-muted: #6f6f8f;      /* base/500 */
+
+  /* Fonts — Onest (body/UI), Exo 2 (section headings), Manrope (alt display) */
+  --font-display: "Exo 2", ui-sans-serif, system-ui, sans-serif;
+  --font-display-alt: "Manrope", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Onest", ui-sans-serif, system-ui, sans-serif;
+  --font-geist: "Geist", ui-sans-serif, system-ui, sans-serif;
+  --font-sora: "Sora", ui-sans-serif, system-ui, sans-serif;
+
+  /* Radii */
+  --radius-card: 1.25rem;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-sans);
+  color: var(--color-ink);
+  background-color: #ffffff;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1, h2, h3, h4, h5 {
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
+}
+
+/* Sticky navbar scroll states — the bar stays transparent at all times;
+   scrolling only nudges the top offset slightly. */
+#site-header.is-scrolled {
+  padding-top: 0.6rem;
+}
+
+/* Even glassy hairline border — uniform all the way around the pill */
+#site-nav::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.85) 0%,
+    rgba(255, 255, 255, 0.55) 100%
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+
+/* Footer dotted world map — hemispheres glide closer on hover */
+.world-map .hemi {
+  transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.world-map:hover .hemi-w {
+  transform: translateX(26px);
+}
+.world-map:hover .hemi-e {
+  transform: translateX(-26px);
+}
+
+/* Hide scrollbar for carousels */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Subtle reveal animation */
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.reveal {
+  opacity: 0;
+}
+.reveal.in-view {
+  animation: fade-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* Respect reduced-motion: show content immediately, no entrance animation */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .reveal {
+    opacity: 1;
+    animation: none !important;
+  }
+}
