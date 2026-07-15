@@ -1,47 +1,24 @@
 ---
-// CTA banner — fresh gradient, headline, Schedule pickup button and a row of
-// compact price-point pills. Clipped/rounded to match the page rhythm.
-const points = [
-  { value: "€1.90/kg", label: "Wash & Fold" },
-  { value: "from €17", label: "Dry Cleaning" },
-  { value: "Free", label: "Pickup & delivery" },
-];
+// Fresh gradient section holding the Clean Pro booking-assistant demo, clipped
+// at the section's bottom edge.
+import ProductDemo from "./ProductDemo.astro";
 ---
 
 <section id="cta-banner" class="relative overflow-hidden m-4 mb-0 rounded-[14px]">
   <!-- Fresh gradient backdrop -->
-  <div class="absolute inset-0 flex flex-col" aria-hidden="true">
-    <div class="h-[560px] shrink-0" style="background:linear-gradient(180deg,#0C1A3A 0%,#1c4a8f 42%,#2f7ad0 70%,#7cb5ec 100%)"></div>
-    <div class="flex-1 bg-[#7cb5ec]"></div>
+  <div
+    class="absolute inset-0"
+    aria-hidden="true"
+    style="background:linear-gradient(180deg,#0C1A3A 0%,#1c4a8f 34%,#2f7ad0 58%,#7cb5ec 82%,#7cb5ec 100%)"
+  >
   </div>
 
-  <div class="relative flex flex-col items-center px-6 py-16 text-center sm:py-24">
-    <h2
-      class="max-w-[900px] font-display text-[clamp(1.6rem,4.5vw,3rem)] font-normal leading-[1.2] tracking-[-0.02em] text-white"
+  <div class="relative flex flex-col items-center px-6 pt-16 sm:pt-24">
+    <!-- Booking-assistant demo, clipped at the section's bottom edge -->
+    <div
+      class="reveal h-[57vh] max-h-[480px] min-h-[380px] w-full max-w-[925px] overflow-hidden rounded-t-[14px] shadow-[0_-20px_60px_rgba(12,26,58,0.35)]"
     >
-      Ready to skip laundry day<br />for good?
-    </h2>
-    <p class="mt-4 max-w-[540px] text-[15px] leading-relaxed text-white/85">
-      Book your first pickup in under a minute. Fresh, folded laundry — back at
-      your door tomorrow.
-    </p>
-
-    <a
-      href="#contact"
-      class="mt-8 inline-flex items-center justify-center rounded-full bg-white px-7 py-3 text-[15px] font-medium text-navy shadow-[0_10px_30px_rgba(12,26,58,0.35)] transition-colors hover:bg-lav-100"
-    >
-      Schedule a pickup
-    </a>
-
-    <div class="mt-10 flex flex-wrap items-stretch justify-center gap-3">
-      {
-        points.map((p) => (
-          <div class="flex min-w-[130px] flex-col items-center rounded-2xl border border-white/20 bg-white/10 px-5 py-3 backdrop-blur-sm">
-            <span class="font-display text-[20px] font-semibold text-white">{p.value}</span>
-            <span class="text-[12px] font-medium text-white/80">{p.label}</span>
-          </div>
-        ))
-      }
+      <ProductDemo />
     </div>
   </div>
 </section>

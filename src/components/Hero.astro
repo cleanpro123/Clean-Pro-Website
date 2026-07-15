@@ -1,78 +1,88 @@
 ---
-// Hero — fixed navbar + dark "deep water" background with an interactive
-// Antigravity particle field (React Three Fiber) that follows the cursor, the
-// headline + Schedule pickup CTA, and the Clean Pro booking-assistant demo
-// clipped at the fold as a teaser.
-import ProductDemo from "./ProductDemo.astro";
-import Antigravity from "./Antigravity.jsx";
+// Hero — dark section filled with an interactive Ballpit (three.js spheres that
+// fall, pile up and get stirred by the cursor), with the badge, headline and
+// the two CTAs centred over it.
+import Ballpit from "./Ballpit.jsx";
 ---
 
 <section
   id="top"
-  class="relative flex h-svh max-h-[820px] min-h-[560px] flex-col overflow-hidden bg-[#070c1e]"
+  class="relative flex h-svh max-h-[900px] min-h-[580px] items-center justify-center overflow-hidden bg-accent"
 >
-  <!-- Dark base with a soft top glow so the particles read clearly -->
+  <!-- Dark base with a soft top glow so the spheres read against it -->
   <div
     class="absolute inset-0"
     aria-hidden="true"
-    style="background:radial-gradient(120% 95% at 50% 0%,#1c3f82 0%,#102450 42%,#0a132e 72%,#070c1e 100%)"
-  ></div>
+    style="background:linear-gradient(180deg,#1c3f82 0%,#102450 34%,#15579f 66%,#1f8fe0 100%)"
+  >
+  </div>
 
-  <!-- Interactive Antigravity particle field — reacts to the cursor on hover -->
-  <div class="absolute inset-0 z-[1]" aria-hidden="true">
-    <Antigravity
+  <!-- Sphere pit — the balls settle into a pile at the bottom and the cursor
+       stirs them. followCursor={false} hides the pointer-driven sphere itself
+       but it still pushes the pile around, so the pit stays interactive. -->
+  <div class="ballpit-layer absolute inset-0 z-[1]" aria-hidden="true">
+    <Ballpit
       client:only="react"
-      count={320}
-      magnetRadius={6}
-      ringRadius={7}
-      waveSpeed={0.4}
-      waveAmplitude={1}
-      particleSize={1.6}
-      lerpSpeed={0.05}
-      color="#6db2ff"
-      autoAnimate
-      particleVariance={1}
-      rotationSpeed={0}
-      depthFactor={1}
-      pulseSpeed={3}
-      particleShape="capsule"
-      fieldStrength={10}
+      count={200}
+      colors={["#ffffff", "#9cc4ef", "#1f8fe0", "#1e215e"]}
+      gravity={0.5}
+      friction={0.9975}
+      wallBounce={0.95}
+      maxVelocity={0.15}
+      followCursor={false}
     />
   </div>
 
-  <!-- Headline block — pointer-events-none so cursor moves reach the particle
-       canvas; the CTA re-enables pointer events so it stays clickable. -->
-  <div class="pointer-events-none relative z-[2] my-auto px-5 pt-16 text-center">
-    <h1
-      class="reveal mx-auto max-w-[720px] text-balance font-display text-[clamp(1.5rem,3.4vw,2.35rem)] font-semibold leading-[1.12] tracking-[-0.02em] text-white [text-shadow:0_2px_28px_rgba(7,12,30,0.7)]"
+  <!-- Copy block — pointer-events-none so the cursor reaches the pit; the
+       badge and CTAs re-enable pointer events so they stay interactive. -->
+  <div class="pointer-events-none relative z-[2] w-full px-5 pt-16 text-center">
+    <div
+      class="reveal inline-flex items-center gap-2.5 rounded-full border border-white/10 bg-white/[0.06] py-1 pl-1 pr-4 backdrop-blur-md"
     >
-      Fresh, clean laundry — picked up and<br />delivered right to your door
+      <span
+        class="rounded-full bg-white px-2.5 py-1 font-geist text-[11px] font-bold uppercase tracking-wide text-ink"
+        >New</span
+      >
+      <span class="font-geist text-[13px] text-white/70"
+        >Same-day pickup now available</span
+      >
+    </div>
+
+    <h1
+      class="reveal mx-auto mt-7 max-w-[860px] text-balance font-display text-[clamp(2rem,5.4vw,3.6rem)] font-bold leading-[1.08] tracking-[-0.03em] text-white [text-shadow:0_2px_32px_rgba(7,12,30,0.75)]"
+      style="animation-delay:.06s"
+    >
+      Fresh, clean laundry — picked up and delivered to your door
     </h1>
 
     <div
-      class="reveal mt-5 flex flex-wrap items-center justify-center gap-x-5 gap-y-1 font-geist text-[14px] font-normal text-white/90"
-      style="animation-delay:.06s"
+      class="reveal pointer-events-auto mt-9 flex flex-wrap items-center justify-center gap-3"
+      style="animation-delay:.12s"
     >
-      <span>Free pickup &amp; delivery</span>
-      <span>24-hour turnaround</span>
-      <span>Eco-friendly cleaning</span>
-    </div>
-
-    <a
-      href="#contact"
-      class="reveal pointer-events-auto mt-8 inline-flex items-center justify-center rounded-full bg-accent px-6 py-2.5 text-[13px] font-medium text-white shadow-[0_10px_30px_rgba(31,143,224,0.4)] transition-colors hover:bg-accent-hover"
-      style="animation-delay:.1s"
-    >
-      Schedule a pickup
-    </a>
-  </div>
-
-  <div class="relative z-[2] flex shrink-0 items-end justify-center px-5 pt-4">
-    <div
-      class="reveal h-[57vh] max-h-[480px] w-full max-w-[925px] overflow-hidden rounded-t-[14px] shadow-[0_-20px_60px_rgba(7,12,30,0.6)]"
-      style="animation-delay:.16s"
-    >
-      <ProductDemo />
+      <a
+        href="#contact"
+        class="inline-flex items-center justify-center rounded-xl bg-white px-6 py-3 font-geist text-[15px] font-semibold text-ink shadow-[0_10px_30px_rgba(7,12,30,0.45)] transition-colors hover:bg-lav-100"
+      >
+        Schedule a pickup
+      </a>
+      <a
+        href="#services"
+        class="inline-flex items-center justify-center rounded-xl border border-white/10 bg-white/[0.08] px-6 py-3 font-geist text-[15px] font-medium text-white/80 backdrop-blur-md transition-colors hover:bg-white/[0.14] hover:text-white"
+      >
+        Learn more
+      </a>
     </div>
   </div>
 </section>
+
+<style is:global>
+  /* Astro wraps a client:only island in <astro-island>, which defaults to
+     display:contents — that reports offsetWidth/offsetHeight of 0. Ballpit
+     sizes its renderer from canvas.parentNode.offsetWidth, so without a real
+     box here the pit renders at 0x0 and no spheres appear. */
+  .ballpit-layer astro-island {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+</style>

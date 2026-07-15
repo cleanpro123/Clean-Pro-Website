@@ -87,10 +87,56 @@ h1, h2, h3, h4, h5 {
   letter-spacing: -0.02em;
 }
 
-/* Sticky navbar scroll states — the bar stays transparent at all times;
-   scrolling only nudges the top offset slightly. */
+/* ── Navbar ──────────────────────────────────────────────────────────────
+   Two states: dark glass while the bar floats over the hero's sphere pit,
+   and the light glass pill once the page scrolls onto white sections.
+   ID selectors here so they win over the Tailwind utilities on the markup. */
 #site-header.is-scrolled {
   padding-top: 0.6rem;
+}
+
+#site-nav .logo-text {
+  color: #ffffff;
+  transition: color 0.5s ease;
+}
+
+#site-nav .nav-links a {
+  color: rgba(255, 255, 255, 0.62);
+  transition: color 0.2s ease;
+}
+#site-nav .nav-links a:hover {
+  color: #ffffff;
+}
+
+#site-nav #nav-cta {
+  background: #ffffff;
+  color: var(--color-ink);
+}
+#site-nav #nav-cta:hover {
+  background: var(--color-lav-100);
+}
+
+/* Scrolled — light pill on light page */
+#site-header.is-scrolled #site-nav {
+  border-color: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.7);
+  box-shadow: 0 9px 30px rgba(26, 29, 78, 0.12);
+}
+#site-header.is-scrolled #site-nav .logo-text {
+  color: var(--color-ink);
+}
+#site-header.is-scrolled #site-nav .nav-links a {
+  color: color-mix(in srgb, var(--color-navy) 80%, transparent);
+}
+#site-header.is-scrolled #site-nav .nav-links a:hover {
+  color: var(--color-navy);
+}
+#site-header.is-scrolled #site-nav #nav-cta {
+  background: var(--color-navy);
+  color: #ffffff;
+}
+#site-header.is-scrolled #site-nav #nav-cta:hover {
+  background: var(--color-navy-700);
 }
 
 /* Even glassy hairline border — uniform all the way around the pill */
@@ -102,8 +148,8 @@ h1, h2, h3, h4, h5 {
   padding: 1px;
   background: linear-gradient(
     180deg,
-    rgba(255, 255, 255, 0.85) 0%,
-    rgba(255, 255, 255, 0.55) 100%
+    rgba(255, 255, 255, 0.18) 0%,
+    rgba(255, 255, 255, 0.06) 100%
   );
   -webkit-mask:
     linear-gradient(#000 0 0) content-box,
@@ -111,6 +157,14 @@ h1, h2, h3, h4, h5 {
   -webkit-mask-composite: xor;
   mask-composite: exclude;
   pointer-events: none;
+  transition: background 0.5s ease;
+}
+#site-header.is-scrolled #site-nav::before {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.85) 0%,
+    rgba(255, 255, 255, 0.55) 100%
+  );
 }
 
 
