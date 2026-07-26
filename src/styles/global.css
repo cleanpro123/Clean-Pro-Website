@@ -82,6 +82,13 @@ body {
   text-rendering: optimizeLegibility;
 }
 
+/* Taps on links/buttons shouldn't wait on double-tap-zoom detection, and the
+   grey tap flash on iOS reads as a bug on the glass surfaces. */
+a, button, [role="button"] {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
 h1, h2, h3, h4, h5 {
   font-family: var(--font-display);
   letter-spacing: -0.02em;

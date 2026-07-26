@@ -329,48 +329,42 @@ function L() {
   }
 }
 
+// These listeners sit on document.body, so they see every touch on the page —
+// including ones on buttons stacked above the canvas. Never preventDefault()
+// here: on touchstart it stops the browser synthesising the click, and on
+// touchmove it blocks scrolling. Scroll behaviour over the pit is handled
+// declaratively by the canvas's touch-action instead.
 function TouchStart(e) {
-  if (e.touches.length > 0) {
-    e.preventDefault();
-    A.x = e.touches[0].clientX;
-    A.y = e.touches[0].clientY;
+  if (e.touches.length === 0) return;
+  A.x = e.touches[0].clientX;
+  A.y = e.touches[0].clientY;
 
-    for (const [elem, t] of b) {
-      const rect = elem.getBoundingClientRect();
-      if (D(rect)) {
-        t.touching = true;
-        P(t, rect);
-        if (!t.hover) {
-          t.hover = true;
-          t.onEnter(t);
-        }
-        t.onMove(t);
-      }
+  for (const [elem, t] of b) {
+    // Drive the pit only when the touch lands on the canvas itself. An
+    // overlaying button is the event target for taps on it, and those must
+    // stay taps.
+    if (e.target !== elem && !elem.contains(e.target)) continue;
+    const rect = elem.getBoundingClientRect();
+    if (!D(rect)) continue;
+    t.touching = true;
+    P(t, rect);
+    if (!t.hover) {
+      t.hover = true;
+      t.onEnter(t);
     }
+    t.onMove(t);
   }
 }
 
 function TouchMove(e) {
-  if (e.touches.length > 0) {
-    e.preventDefault();
-    A.x = e.touches[0].clientX;
-    A.y = e.touches[0].clientY;
+  if (e.touches.length === 0) return;
+  A.x = e.touches[0].clientX;
+  A.y = e.touches[0].clientY;
 
-    for (const [elem, t] of b) {
-      const rect = elem.getBoundingClientRect();
-      P(t, rect);
-
-      if (D(rect)) {
-        if (!t.hover) {
-          t.hover = true;
-          t.touching = true;
-          t.onEnter(t);
-        }
-        t.onMove(t);
-      } else if (t.hover && t.touching) {
-        t.onMove(t);
-      }
-    }
+  for (const [elem, t] of b) {
+    if (!t.touching) continue;
+    P(t, elem.getBoundingClientRect());
+    t.onMove(t);
   }
 }
 
@@ -674,7 +668,10 @@ function createBallpit(e, t = {}) {
   const r = new a();
   let c = false;
 
-  e.style.touchAction = 'none';
+  // pan-y, not none: the hero pit is full-height, so blocking vertical panning
+  // here would leave touch users unable to scroll past it. Horizontal drags
+  // still reach the pit and stir the spheres.
+  e.style.touchAction = 'pan-y';
   e.style.userSelect = 'none';
   e.style.webkitUserSelect = 'none';
 
@@ -714,6 +711,9 @@ function createBallpit(e, t = {}) {
     setCount(e) {
       initialize({ ...s.config, count: e });
     },
+    setConfig(e) {
+      initialize({ ...s.config, ...e });
+    },
     togglePause() {
       c = !c;
     },
@@ -724,7 +724,23 @@ function createBallpit(e, t = {}) {
   };
 }
 
-const Ballpit = ({ className = '', followCursor = true, ...props }) => {
+// Responsive tiers — the narrower the viewport, the fewer and smaller the
+// spheres. A phone-width camera sees a much narrower slice of the world, so
+// the full desktop count/size buries the headline and the CTAs underneath it.
+// Ordered widest-first; the first tier whose minWidth fits wins.
+const TIERS = [
+  { minWidth: 1280, countScale: 1, sizeScale: 1 },
+  { minWidth: 1024, countScale: 0.8, sizeScale: 0.92 },
+  { minWidth: 768, countScale: 0.6, sizeScale: 0.82 },
+  { minWidth: 480, countScale: 0.72, sizeScale: 0.88 },
+  { minWidth: 0, countScale: 0.62, sizeScale: 0.82 }
+];
+
+function tierIndexFor(width) {
+  return TIERS.findIndex(tier => width >= tier.minWidth);
+}
+
+const Ballpit = ({ className = '', followCursor = true, responsive = true, ...props }) => {
   const canvasRef = useRef(null);
   const spheresInstanceRef = useRef(null);
 
@@ -732,12 +748,51 @@ const Ballpit = ({ className = '', followCursor = true, ...props }) => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    spheresInstanceRef.current = createBallpit(canvas, { followCursor, ...props });
+    const base = { followCursor, ...props };
+    const baseCount = base.count ?? X.count;
+    const baseMinSize = base.minSize ?? X.minSize;
+    const baseMaxSize = base.maxSize ?? X.maxSize;
+    const baseSize0 = base.size0 ?? X.size0;
+
+    // Config overrides for the tier the current viewport falls into.
+    const tierConfig = index => {
+      const { countScale, sizeScale } = TIERS[index];
+      return {
+        count: Math.max(24, Math.round(baseCount * countScale)),
+        minSize: baseMinSize * sizeScale,
+        maxSize: baseMaxSize * sizeScale,
+        size0: baseSize0 * sizeScale
+      };
+    };
+
+    let tier = responsive ? tierIndexFor(window.innerWidth) : -1;
+    const instance = createBallpit(canvas, {
+      ...base,
+      ...(responsive ? tierConfig(tier) : {})
+    });
+    spheresInstanceRef.current = instance;
+
+    // Rebuilding the pit resets the pile, so only do it when the viewport
+    // actually crosses a breakpoint — not on every resize tick.
+    let resizeTimer;
+    const onResize = () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        const next = tierIndexFor(window.innerWidth);
+        if (next === tier) return;
+        tier = next;
+        instance.setConfig(tierConfig(tier));
+      }, 200);
+    };
+    if (responsive) window.addEventListener('resize', onResize);
 
     return () => {
-      if (spheresInstanceRef.current) {
-        spheresInstanceRef.current.dispose();
+      if (responsive) {
+        clearTimeout(resizeTimer);
+        window.removeEventListener('resize', onResize);
       }
+      instance.dispose();
+      spheresInstanceRef.current = null;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
