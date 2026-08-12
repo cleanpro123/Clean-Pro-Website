@@ -1,59 +1,253 @@
 ---
-// "Our services" — one big feature card plus two dark service cards.
+// "Our services" — the Saj-style split: a preview panel for the selected
+// service beside the full list, driven by clicks and arrow keys.
+import SectionHeading from "./SectionHeading.astro";
+
+const services = [
+  {
+    title: "Wash & Fold",
+    price: "From €1.90/kg",
+    blurb:
+      "Your everyday laundry washed, dried and neatly folded — sorted by colour and fabric, ready to go straight back in the drawer.",
+    includes: [
+      "Sorted by colour, fabric and temperature",
+      "Hypoallergenic, plant-based detergents",
+      "Folded and wrapped in reusable bags",
+      "Back within 24 hours",
+    ],
+    icon: '<path d="M4 7h16v13H4z" /><path d="M4 7l2-3h12l2 3" /><circle cx="12" cy="13.5" r="3.5" />',
+  },
+  {
+    title: "Dry Cleaning",
+    price: "From €6.50/item",
+    blurb:
+      "Suits, dresses and delicate fabrics expertly cleaned and hand-finished, then returned pressed and protected on hangers.",
+    includes: [
+      "Solvent-free cleaning for delicates",
+      "Stain treatment by hand",
+      "Pressed and returned on hangers",
+      "Garment covers included",
+    ],
+    icon: '<path d="M12 3a2 2 0 0 0-2 2c0 1.2 1 1.7 2 2.3 1 .6 2 1.1 2 2.2" /><path d="M12 9.5 4 15v5h16v-5Z" />',
+  },
+  {
+    title: "Ironing & Bedding",
+    price: "From €2.40/item",
+    blurb:
+      "Crisp, ready-to-wear shirts plus freshly laundered duvets, sheets and towels — the finishing touches that make home feel new.",
+    includes: [
+      "Shirts pressed and hung",
+      "Duvets, sheets and towels laundered",
+      "Fresh linen scent, no harsh chemicals",
+      "Folded to fit your linen cupboard",
+    ],
+    icon: '<path d="M3 13h12a5 5 0 0 0-5-5H6l-3 5Z" /><path d="M3 13v4h18v-4" /><path d="M15 8h3a3 3 0 0 1 3 3v2" />',
+  },
+  {
+    title: "Commercial Laundry",
+    price: "Custom pricing",
+    blurb:
+      "Restaurants, salons, gyms and studios — scheduled collections, volume pricing and a turnaround you can build a rota around.",
+    includes: [
+      "Fixed weekly collection slots",
+      "Volume pricing and monthly invoicing",
+      "Linen, uniforms, towels and aprons",
+      "Dedicated account manager",
+    ],
+    icon: '<path d="M3 21h18" /><path d="M5 21V7l7-4 7 4v14" /><path d="M9 21v-5h6v5" /><path d="M9 11h.01M15 11h.01" />',
+  },
+];
+
+const number = (i: number) => String(i + 1).padStart(2, "0");
 ---
 
-<section id="services" class="bg-lav-50/60 py-14 sm:py-20">
-  <div class="mx-auto max-w-6xl px-6">
-    <!-- header -->
-    <div class="reveal mb-9 flex flex-col items-start gap-2.5 sm:mb-14">
-      <span class="inline-flex items-center rounded-[40px] bg-[#eeeef0] px-3.5 py-1.5 text-[12px] font-medium text-[#0d0f29]">
-        Every fabric, handled with care
-      </span>
-      <h2 class="font-display text-[clamp(1.7rem,3.4vw,2.4rem)] font-normal leading-tight tracking-[-0.03em] text-[#0d0f29]">
-        Services for your whole home
-      </h2>
+<section id="services" class="bg-ink-50 py-20 sm:py-24">
+  <div class="container-x">
+    <div class="reveal">
+      <SectionHeading
+        eyebrow="What we do"
+        title="Every fabric,"
+        highlight="handled with care"
+        subtitle="Pick a single service or hand over the whole basket — same collection, same 24-hour promise."
+      />
     </div>
 
-    <!-- cards — big card full width; the two dark cards sit 2-up on phones -->
-    <div class="reveal grid grid-cols-2 gap-4 lg:grid-cols-4">
-      <!-- big card -->
-      <article
-        class="col-span-2 flex min-h-[180px] flex-col justify-between rounded-2xl border border-[#d6d6ec] p-6 sm:min-h-[280px] sm:p-7 lg:min-h-[360px]"
-        style="background-image:linear-gradient(-57.34deg,#cfe3fa 0%,#ffffff 98.6%)"
-      >
-        <div>
-          <span class="inline-flex items-center rounded-full bg-white/70 px-3 py-1 text-[12px] font-medium text-navy">From €1.90/kg</span>
-          <h3 class="mt-4 max-w-[16ch] text-[22px] font-medium leading-[1.2] text-[#121438] sm:text-[26px] lg:text-[30px]">
-            Wash &amp; Fold
-          </h3>
-        </div>
-        <p class="mt-5 max-w-[38ch] text-[13px] font-medium leading-[1.45] text-[#404276] sm:mt-8 sm:text-[15px]">
-          Your everyday laundry washed, dried and neatly folded — sorted by colour
-          and fabric, and ready to put straight back in the drawer.
-        </p>
-      </article>
+    <div
+      id="services-switcher"
+      class="mt-14 grid gap-6 lg:grid-cols-[1.05fr_1fr] lg:gap-10"
+    >
+      <!-- Preview of whichever service is selected -->
+      <div class="reveal">
+        {
+          services.map((s, i) => (
+            <div
+              class="service-panel relative hidden h-full flex-col justify-center overflow-hidden rounded-3xl border border-ink-100 bg-gradient-to-br from-brand-50 via-white to-teal-50 p-7 sm:p-8"
+              data-index={i}
+            >
+              {/* Oversized index, sitting behind the content */}
+              <span
+                aria-hidden="true"
+                class="pointer-events-none absolute -top-3 right-4 font-display text-[5rem] font-extrabold leading-none tracking-tight text-ink-900/5 sm:text-[6.5rem]"
+              >
+                {number(i)}
+              </span>
 
-      <!-- dark card 2 -->
-      <article class="flex min-h-[200px] flex-col justify-between rounded-2xl bg-[#404276] p-6 sm:min-h-[260px] sm:p-7 lg:min-h-[360px]">
-        <h3 class="text-[13px] font-medium leading-[1.2] text-white sm:text-[20px] lg:text-[24px]">
-          Dry Cleaning
-        </h3>
-        <p class="mt-4 text-[11px] font-medium leading-[1.45] text-[#d6d6ec] sm:mt-8 sm:text-[15px]">
-          Suits, dresses and delicate fabrics expertly cleaned and hand-finished,
-          then returned pressed and protected on hangers.
-        </p>
-      </article>
+              <div class="animate-rise relative">
+                <div class="grid size-20 place-items-center rounded-2xl bg-white/70 text-brand-500 shadow-[0_20px_45px_-28px_rgba(30,33,36,0.5)] backdrop-blur-sm sm:size-24">
+                  <svg
+                    width="38"
+                    height="38"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    set:html={s.icon}
+                  />
+                </div>
 
-      <!-- dark card 3 -->
-      <article class="flex min-h-[200px] flex-col justify-between rounded-2xl bg-[#404276] p-6 sm:min-h-[260px] sm:p-7 lg:min-h-[360px]">
-        <h3 class="text-[13px] font-medium leading-[1.2] text-white sm:text-[20px] lg:text-[24px]">
-          Ironing &amp; Bedding
-        </h3>
-        <p class="mt-4 text-[11px] font-medium leading-[1.45] text-[#d6d6ec] sm:mt-8 sm:text-[15px]">
-          Crisp, ready-to-wear shirts plus freshly laundered duvets, sheets and
-          towels — the finishing touches that make home feel new.
-        </p>
-      </article>
+                <p class="mt-6 inline-flex items-center rounded-full border border-brand-100 bg-white/70 px-3 py-1 text-xs font-semibold text-brand-600">
+                  {s.price}
+                </p>
+
+                <h3 class="mt-3 font-display text-xl font-extrabold leading-tight tracking-tight text-ink-900 sm:text-2xl">
+                  {s.title}
+                </h3>
+
+                <p class="mt-3 max-w-md text-sm leading-relaxed text-ink-500">
+                  {s.blurb}
+                </p>
+
+                <div class="mt-6 max-w-md border-t border-ink-100 pt-5">
+                  <p class="text-[11px] font-semibold uppercase tracking-[0.16em] text-ink-400">
+                    What we handle
+                  </p>
+                  <ul class="mt-3.5 grid gap-2">
+                    {s.includes.map((item) => (
+                      <li class="flex items-start gap-3 text-sm text-ink-600">
+                        <span
+                          aria-hidden="true"
+                          class="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-[2px] bg-teal-400"
+                        />
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                <a
+                  href="#contact"
+                  class="group mt-6 inline-flex items-center gap-2.5 text-sm font-semibold text-brand-600 transition-colors hover:text-brand-700"
+                >
+                  Book this service
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 16 16"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                    class="transition-transform duration-300 group-hover:translate-x-1"
+                  >
+                    <path d="M3 8h10M9 4l4 4-4 4" />
+                  </svg>
+                </a>
+              </div>
+            </div>
+          ))
+        }
+      </div>
+
+      <!-- The full list — clicks or arrow keys move through it -->
+      <ul class="reveal flex flex-col gap-3" role="tablist">
+        {
+          services.map((s, i) => (
+            <li>
+              <button
+                type="button"
+                role="tab"
+                data-index={i}
+                class="service-tab group flex w-full items-start gap-5 rounded-2xl border border-ink-100 bg-white p-5 text-left transition-all duration-300 hover:border-brand-200 sm:p-6"
+              >
+                <span class="tab-number font-display text-sm font-extrabold text-ink-300 transition-colors">
+                  {number(i)}
+                </span>
+                <span class="min-w-0 flex-1">
+                  <span class="flex flex-wrap items-center gap-x-3 gap-y-1">
+                    <span class="font-display text-base font-extrabold tracking-tight text-ink-900">
+                      {s.title}
+                    </span>
+                    <span class="text-xs font-semibold text-ink-400">
+                      {s.price}
+                    </span>
+                  </span>
+                  <span class="mt-1.5 block text-sm leading-relaxed text-ink-500">
+                    {s.blurb}
+                  </span>
+                </span>
+              </button>
+            </li>
+          ))
+        }
+      </ul>
     </div>
   </div>
 </section>
+
+<style>
+  /* The selected row lifts out of the list and picks up the brand tint. */
+  .service-tab.is-active {
+    border-color: var(--color-brand-200);
+    background: linear-gradient(
+      135deg,
+      var(--color-brand-50) 0%,
+      #ffffff 70%
+    );
+    box-shadow: 0 24px 50px -34px rgba(30, 33, 36, 0.55);
+  }
+  .service-tab.is-active .tab-number {
+    color: var(--color-brand-500);
+  }
+  .service-panel.is-active {
+    display: flex;
+  }
+</style>
+
+<script>
+  // Clicking a row swaps the preview panel; arrow keys walk the list.
+  const root = document.getElementById("services-switcher");
+  if (root) {
+    const tabs = Array.from(root.querySelectorAll<HTMLButtonElement>(".service-tab"));
+    const panels = Array.from(root.querySelectorAll<HTMLElement>(".service-panel"));
+
+    const activate = (i: number) => {
+      tabs.forEach((t, idx) => {
+        t.classList.toggle("is-active", idx === i);
+        t.setAttribute("aria-selected", String(idx === i));
+      });
+      panels.forEach((p, idx) => p.classList.toggle("is-active", idx === i));
+    };
+
+    tabs.forEach((tab, i) => {
+      tab.addEventListener("click", () => activate(i));
+      tab.addEventListener("keydown", (e) => {
+        const last = tabs.length - 1;
+        let next: number | null = null;
+        if (e.key === "ArrowDown" || e.key === "ArrowRight") next = i === last ? 0 : i + 1;
+        else if (e.key === "ArrowUp" || e.key === "ArrowLeft") next = i === 0 ? last : i - 1;
+        else if (e.key === "Home") next = 0;
+        else if (e.key === "End") next = last;
+        if (next === null) return;
+        e.preventDefault();
+        activate(next);
+        tabs[next].focus();
+      });
+    });
+
+    activate(0);
+  }
+</script>

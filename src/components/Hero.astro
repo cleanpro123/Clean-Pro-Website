@@ -1,88 +1,324 @@
 ---
-// Hero — dark section filled with an interactive Ballpit (three.js spheres that
-// fall, pile up and get stirred by the cursor), with the badge, headline and
-// the two CTAs centred over it.
-import Ballpit from "./Ballpit.jsx";
+// Hero — an inset, rounded card filling the viewport. Copy runs down the left
+// (eyebrow pill, headline, lead, booking CTA, proof strip); the right holds a
+// composed "order tracking" mock built from markup, with two small floating
+// cards over a soft blue glow. The white nav bar tucks into its top edge.
+// Proof strip — the values count up from zero when the strip scrolls into view
+// (same treatment as the Saj Innovative stats band). `target` drives both the
+// server-rendered final value and the client animation.
+const stats = [
+  { target: 4.9, decimals: 1, suffix: "★", label: "Average rating" },
+  { target: 50000, decimals: 0, suffix: "+", label: "Orders delivered" },
+  { target: 24, decimals: 0, suffix: " hrs", label: "Typical turnaround" },
+  { target: 100, decimals: 0, suffix: "%", label: "Eco-friendly" },
+];
+
+const formatStat = (value: number, decimals: number) =>
+  value.toLocaleString("en-US", {
+    minimumFractionDigits: decimals,
+    maximumFractionDigits: decimals,
+  });
+
+const steps = [
+  { title: "Collected from your door", meta: "Today, 8:20 am", done: true },
+  { title: "Washed, dried & folded", meta: "Today, 11:45 am", done: true },
+  { title: "Out for delivery", meta: "Arriving 6:00 – 7:00 pm", done: false },
+];
 ---
 
-<section
-  id="top"
-  class="relative flex h-svh max-h-[900px] min-h-[580px] items-center justify-center overflow-hidden bg-accent"
->
-  <!-- Dark base with a soft top glow so the spheres read against it -->
+<section id="top" class="px-3 pt-3 sm:px-4 sm:pt-4">
   <div
-    class="absolute inset-0"
-    aria-hidden="true"
-    style="background:linear-gradient(180deg,#1c3f82 0%,#102450 34%,#15579f 66%,#1f8fe0 100%)"
+    class="relative flex min-h-[720px] flex-col overflow-hidden rounded-[24px] border border-ink-100 bg-white sm:rounded-[32px] lg:h-svh lg:min-h-[880px] lg:max-h-[1060px]"
   >
-  </div>
-
-  <!-- Sphere pit — the balls settle into a pile at the bottom and the cursor
-       stirs them. followCursor={false} hides the pointer-driven sphere itself
-       but it still pushes the pile around, so the pit stays interactive. -->
-  <div class="ballpit-layer absolute inset-0 z-[1]" aria-hidden="true">
-    <Ballpit
-      client:only="react"
-      count={200}
-      colors={["#ffffff", "#9cc4ef", "#1f8fe0", "#1e215e"]}
-      gravity={0.5}
-      friction={0.9975}
-      wallBounce={0.95}
-      maxVelocity={0.15}
-      followCursor={false}
-    />
-  </div>
-
-  <!-- Copy block — pointer-events-none so the cursor reaches the pit; the
-       badge and CTAs re-enable pointer events so they stay interactive. -->
-  <div class="pointer-events-none relative z-[2] w-full px-5 pt-16 text-center">
+    <!-- White base with a faint blue wash through the middle that resolves
+         back to white at the bottom edge, so the card melts into the page. -->
     <div
-      class="reveal inline-flex items-center gap-2.5 rounded-full border border-white/10 bg-white/[0.06] py-1 pl-1 pr-4 backdrop-blur-md"
+      class="absolute inset-0"
+      aria-hidden="true"
+      style="background:linear-gradient(180deg,#ffffff 0%,#f4f8fd 34%,#eaf2fb 62%,#f7fafd 86%,#ffffff 100%)"
     >
-      <span
-        class="rounded-full bg-white px-2.5 py-1 font-geist text-[11px] font-bold uppercase tracking-wide text-ink"
-        >New</span
-      >
-      <span class="font-geist text-[13px] text-white/70"
-        >Same-day pickup now available</span
-      >
     </div>
 
-    <h1
-      class="reveal mx-auto mt-7 max-w-[860px] text-balance font-display text-[clamp(2rem,5.4vw,3.6rem)] font-bold leading-[1.08] tracking-[-0.03em] text-white [text-shadow:0_2px_32px_rgba(7,12,30,0.75)]"
-      style="animation-delay:.06s"
+    <!-- Single soft blue glow, sitting behind the right-hand mock -->
+    <div
+      class="pointer-events-none absolute -top-24 right-[-10%] h-[620px] w-[760px] max-w-[120%] rounded-full blur-[130px]"
+      aria-hidden="true"
+      style="background:radial-gradient(ellipse at center, rgba(58,118,184,0.22), rgba(20,184,166,0.10) 55%, transparent 75%)"
     >
-      Fresh, clean laundry — picked up and delivered to your door
-    </h1>
+    </div>
 
     <div
-      class="reveal pointer-events-auto mt-9 flex flex-wrap items-center justify-center gap-3"
-      style="animation-delay:.12s"
+      class="relative z-[2] mx-auto flex h-full w-full max-w-[1180px] flex-1 flex-col px-6 pb-12 pt-28 sm:px-8 sm:pt-32 lg:px-10 lg:pb-14 lg:pt-36"
     >
-      <a
-        href="#contact"
-        class="inline-flex items-center justify-center rounded-xl bg-white px-6 py-3 font-geist text-[15px] font-semibold text-ink shadow-[0_10px_30px_rgba(7,12,30,0.45)] transition-colors hover:bg-lav-100"
+      <div
+        class="grid flex-1 grid-cols-1 items-center gap-12 lg:grid-cols-[1.02fr_0.98fr] lg:gap-10"
       >
-        Schedule a pickup
-      </a>
-      <a
-        href="#services"
-        class="inline-flex items-center justify-center rounded-xl border border-white/10 bg-white/[0.08] px-6 py-3 font-geist text-[15px] font-medium text-white/80 backdrop-blur-md transition-colors hover:bg-white/[0.14] hover:text-white"
+        <!-- Copy column -->
+        <div class="flex flex-col items-start text-left">
+          <span
+            class="reveal inline-flex items-center gap-2 rounded-full border border-teal-100 bg-teal-50 px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.16em] text-teal-600"
+          >
+            <span class="h-1.5 w-1.5 rounded-full bg-teal-500"></span>
+            Same-day pickup available
+          </span>
+
+          <h1
+            class="reveal mt-6 max-w-[620px] text-balance font-display text-[clamp(2.2rem,4.6vw,3.6rem)] font-extrabold leading-[1.05] tracking-[-0.03em] text-ink-900"
+            style="animation-delay:.06s"
+          >
+            Fresh, clean laundry — picked up and <span class="text-brand-500"
+              >delivered to your door</span
+            >
+          </h1>
+
+          <p
+            class="reveal mt-5 max-w-[500px] text-[16px] leading-relaxed text-ink-500 sm:text-[17px]"
+            style="animation-delay:.12s"
+          >
+            Same-day pickup, 24-hour turnaround and eco-friendly cleaning — from
+            everyday wash &amp; fold to delicate dry cleaning.
+          </p>
+
+          <!-- Single CTA — straight to the booking form. -->
+          <a
+            href="#contact"
+            class="reveal group mt-8 inline-flex items-center gap-2.5 rounded-xl bg-brand-500 py-3.5 pl-6 pr-3 text-[15px] font-semibold text-white shadow-[0_16px_40px_-18px_rgba(58,118,184,0.9)] transition-colors hover:bg-brand-600"
+            style="animation-delay:.18s"
+          >
+            Book a pickup
+            <span
+              class="grid size-7 shrink-0 place-items-center rounded-full bg-white/20"
+            >
+              <svg
+                width="13"
+                height="13"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.6"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+                class="transition-transform duration-300 group-hover:translate-x-0.5"
+                ><path d="M5 12h14M13 6l6 6-6 6"></path></svg
+              >
+            </span>
+          </a>
+
+          <p class="reveal mt-3 text-[13px] text-ink-400" style="animation-delay:.2s">
+            Free collection and delivery · No subscription required
+          </p>
+
+        </div>
+
+        <!-- Visual column — order tracking mock -->
+        <div class="reveal relative hidden lg:block" style="animation-delay:.3s">
+          <div class="relative mx-auto w-full max-w-[420px]">
+            <!-- Main card -->
+            <div
+              class="rounded-3xl border border-ink-100 bg-white p-6 shadow-[0_30px_70px_rgba(30,33,36,0.12)]"
+            >
+              <div class="flex items-center gap-3">
+                <span
+                  class="grid size-11 shrink-0 place-items-center rounded-2xl bg-brand-500 text-white"
+                >
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    aria-hidden="true"
+                    ><path
+                      d="M12 3s6 6.4 6 11a6 6 0 0 1-12 0c0-4.6 6-11 6-11Z"
+                      fill="currentColor"></path></svg
+                  >
+                </span>
+                <div class="min-w-0 flex-1">
+                  <p class="text-[15px] font-semibold text-ink-900">
+                    Order #1042
+                  </p>
+                  <p class="text-[12px] text-ink-400">Wash &amp; fold · 6.4 kg</p>
+                </div>
+                <span
+                  class="rounded-full bg-teal-50 px-3 py-1 text-[11px] font-semibold text-teal-600"
+                  >On track</span
+                >
+              </div>
+
+              <ol
+                class="relative mt-6 space-y-5 before:absolute before:bottom-3 before:left-[11px] before:top-3 before:w-px before:bg-ink-100"
+              >
+                {
+                  steps.map((step) => (
+                    <li class="relative flex gap-3.5">
+                      <span
+                        class={`relative z-[1] mt-0.5 grid size-[23px] shrink-0 place-items-center rounded-full border-2 ${
+                          step.done
+                            ? "border-brand-500 bg-brand-500 text-white"
+                            : "border-teal-500 bg-white text-teal-500"
+                        }`}
+                      >
+                        {step.done ? (
+                          <svg
+                            width="12"
+                            height="12"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="3.2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          >
+                            <path d="m5 13 4 4L19 7" />
+                          </svg>
+                        ) : (
+                          <span class="size-2 rounded-full bg-teal-500" />
+                        )}
+                      </span>
+                      <div>
+                        <p class="text-[14px] font-semibold text-ink-900">
+                          {step.title}
+                        </p>
+                        <p class="mt-0.5 text-[12px] text-ink-400">{step.meta}</p>
+                      </div>
+                    </li>
+                  ))
+                }
+              </ol>
+
+              <div
+                class="mt-6 flex items-center justify-between border-t border-ink-100 pt-5"
+              >
+                <div>
+                  <p class="text-[12px] text-ink-400">Driver</p>
+                  <p class="text-[14px] font-semibold text-ink-900">
+                    Marcus · 4.9★
+                  </p>
+                </div>
+                <span
+                  class="rounded-full bg-ink-900 px-4 py-2 text-[13px] font-semibold text-white"
+                  >Track order</span
+                >
+              </div>
+            </div>
+
+            <!-- Floating chip — top right -->
+            <div
+              class="absolute -right-6 -top-6 flex items-center gap-2.5 rounded-2xl border border-ink-100 bg-white px-4 py-3 shadow-[0_18px_40px_rgba(30,33,36,0.12)]"
+            >
+              <span
+                class="grid size-8 place-items-center rounded-full bg-teal-50 text-teal-600"
+              >
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                  ><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"
+                  ></path></svg
+                >
+              </span>
+              <div>
+                <p class="text-[13px] font-semibold text-ink-900">24-hour</p>
+                <p class="text-[11px] text-ink-400">turnaround</p>
+              </div>
+            </div>
+
+            <!-- Floating chip — bottom left -->
+            <div
+              class="absolute -bottom-7 -left-7 rounded-2xl border border-ink-100 bg-white px-4 py-3 shadow-[0_18px_40px_rgba(30,33,36,0.12)]"
+            >
+              <p class="text-[13px] font-semibold text-ink-900">
+                Eco-friendly clean
+              </p>
+              <p class="mt-0.5 text-[11px] text-ink-400">
+                Plant-based · reusable bags
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Proof strip — centred across the full width of the hero card -->
+      <div
+        id="hero-stats"
+        class="reveal mt-12 flex flex-wrap items-start justify-center gap-x-10 gap-y-6 border-t border-ink-100 pt-8 sm:gap-x-16 lg:mt-10"
+        style="animation-delay:.36s"
       >
-        Learn more
-      </a>
+        {
+          stats.map((s) => (
+            <div class="flex min-w-[110px] flex-col items-center gap-0.5 text-center">
+              <span
+                class="stat-value font-display text-[22px] font-extrabold text-ink-900 sm:text-[26px]"
+                data-target={s.target}
+                data-decimals={s.decimals}
+                data-suffix={s.suffix}
+              >
+                {formatStat(s.target, s.decimals) + s.suffix}
+              </span>
+              <span class="text-[12px] font-medium text-ink-500">{s.label}</span>
+            </div>
+          ))
+        }
+      </div>
     </div>
   </div>
 </section>
 
-<style is:global>
-  /* Astro wraps a client:only island in <astro-island>, which defaults to
-     display:contents — that reports offsetWidth/offsetHeight of 0. Ballpit
-     sizes its renderer from canvas.parentNode.offsetWidth, so without a real
-     box here the pit renders at 0x0 and no spheres appear. */
-  .ballpit-layer astro-island {
-    display: block;
-    width: 100%;
-    height: 100%;
+<script>
+  // Count the proof-strip numbers up from zero the first time the strip is in
+  // view. Values are server-rendered at their final state, so no-JS and
+  // reduced-motion visitors just see the finished numbers.
+  const strip = document.getElementById("hero-stats");
+  const values = Array.from(
+    strip?.querySelectorAll<HTMLElement>(".stat-value") ?? [],
+  );
+
+  if (values.length && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    const format = (n: number, decimals: number) =>
+      n.toLocaleString("en-US", {
+        minimumFractionDigits: decimals,
+        maximumFractionDigits: decimals,
+      });
+
+    const run = (el: HTMLElement) => {
+      const target = Number(el.dataset.target ?? 0);
+      const decimals = Number(el.dataset.decimals ?? 0);
+      const suffix = el.dataset.suffix ?? "";
+      const duration = 1600;
+      let start: number | null = null;
+
+      const tick = (now: number) => {
+        start ??= now;
+        const p = Math.min((now - start) / duration, 1);
+        const eased = 1 - Math.pow(1 - p, 3);
+        el.textContent = format(target * eased, decimals) + suffix;
+        if (p < 1) requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    };
+
+    // Park them at zero until the strip is seen.
+    values.forEach((el) => {
+      el.textContent =
+        format(0, Number(el.dataset.decimals ?? 0)) + (el.dataset.suffix ?? "");
+    });
+
+    const io = new IntersectionObserver(
+      (entries, obs) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          values.forEach(run);
+          obs.disconnect();
+        });
+      },
+      { threshold: 0.4 },
+    );
+    io.observe(strip!);
   }
-</style>
+</script>

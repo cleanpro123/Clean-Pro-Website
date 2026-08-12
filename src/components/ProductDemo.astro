@@ -107,12 +107,12 @@ const threads = {
       tabs.map((t) => (
         <button
           type="button"
-          class="tab flex flex-col items-start rounded-md border border-[#eeeef0] bg-[#fafafa] px-2.5 py-1.5 text-left [&:last-child]:col-span-2 sm:px-3.5 sm:py-2.5 sm:[&:last-child]:col-span-1"
+          class="tab flex flex-col items-start rounded-md border border-[#eceef0] bg-[#f6f7f8] px-2.5 py-1.5 text-left [&:last-child]:col-span-2 sm:px-3.5 sm:py-2.5 sm:[&:last-child]:col-span-1"
           data-tab={t.key}
           aria-selected={t.key === "wash" ? "true" : "false"}
         >
-          <span class="tab-title text-[11px] font-medium leading-[1.2] text-[#57576d] sm:text-[13px]">{t.title}</span>
-          <span class="tab-sub mt-0.5 text-[10px] leading-[1.3] text-[#878796] sm:text-[11px] sm:leading-[1.35]">{t.sub}</span>
+          <span class="tab-title text-[11px] font-medium leading-[1.2] text-[#656c73] sm:text-[13px]">{t.title}</span>
+          <span class="tab-sub mt-0.5 text-[10px] leading-[1.3] text-[#8b9299] sm:text-[11px] sm:leading-[1.35]">{t.sub}</span>
         </button>
       ))
     }
@@ -121,11 +121,11 @@ const threads = {
   <!-- chat stage -->
   <div
     class="mt-2 flex-1 overflow-hidden rounded-t-[14px] px-2.5 pt-3 sm:px-5 sm:pt-4"
-    style="background-image:linear-gradient(134deg,#eeeef0 36%,#dedee2 100%)"
+    style="background-image:linear-gradient(134deg,#eceef0 36%,#d5d9dd 100%)"
   >
     <div
       class="mx-auto h-full w-full max-w-[560px] overflow-hidden rounded-t-[14px] px-1 pt-1"
-      style="background:linear-gradient(135deg,#9cc4ef 70%,#37dfbd 100%)"
+      style="background:linear-gradient(135deg,#b3d0ee 70%,#14b8a6 100%)"
     >
       <div class="chat-scroll h-full w-full overflow-y-auto rounded-t-[11px] bg-white p-3.5 [scrollbar-width:none] sm:p-6 [&::-webkit-scrollbar]:hidden">
       {
@@ -134,7 +134,7 @@ const threads = {
             {msgs.map((m) =>
               m.role === "user" ? (
                 <div class="msg flex items-center justify-end gap-1.5">
-                  <div class="tw rounded-full bg-[#eeeef0] px-2.5 py-1 text-[9px] font-medium text-[#070715] sm:text-[11px]">
+                  <div class="tw rounded-full bg-[#eceef0] px-2.5 py-1 text-[9px] font-medium text-[#1e2124] sm:text-[11px]">
                     {m.text}
                   </div>
                   <img
@@ -158,40 +158,40 @@ const threads = {
                       </span>
                       {m.tool && (
                         <Fragment>
-                          <span class="tool-rail my-0.5 w-px flex-1 bg-[#d6d6e2] transition-opacity duration-500" />
-                          <span class="tool-rail mb-0.5 size-1 shrink-0 rounded-full bg-[#c5c6d8] transition-opacity duration-500" />
+                          <span class="tool-rail my-0.5 w-px flex-1 bg-[#d5d9dd] transition-opacity duration-500" />
+                          <span class="tool-rail mb-0.5 size-1 shrink-0 rounded-full bg-[#b9bfc4] transition-opacity duration-500" />
                         </Fragment>
                       )}
                     </div>
                     {/* content */}
                     <div class="flex flex-1 flex-col gap-1 pt-px sm:gap-2">
-                      <span class="tw text-[9px] font-medium leading-[1.4] text-[#9191a9] sm:text-[12px]">{m.thought}</span>
+                      <span class="tw text-[9px] font-medium leading-[1.4] text-[#8b9299] sm:text-[12px]">{m.thought}</span>
                       {m.tool && (
                         <div class="tool-block">
                           <div class="overflow-hidden">
                             <div class="flex flex-col gap-0.5 text-[9px] font-medium leading-[1.4] sm:text-[11px]">
-                              <button type="button" class="tool-toggle w-fit text-left text-[#2e2e4a] transition-colors hover:text-[#070715]">
+                              <button type="button" class="tool-toggle w-fit text-left text-[#3a3f44] transition-colors hover:text-[#1e2124]">
                                 Details
                               </button>
-                              <p class="text-[#9191a9]">{m.tool}</p>
+                              <p class="text-[#8b9299]">{m.tool}</p>
                             </div>
                           </div>
                         </div>
                       )}
                     </div>
                   </div>
-                  <p class="tw mt-1 pl-[26px] text-[9px] font-medium leading-[1.45] text-[#2e2e4a] sm:mt-2 sm:text-[11px]">{m.text}</p>
+                  <p class="tw mt-1 pl-[26px] text-[9px] font-medium leading-[1.45] text-[#3a3f44] sm:mt-2 sm:text-[11px]">{m.text}</p>
                   {m.attachment && (
-                    <div class="attachment ml-[26px] mt-2 flex w-fit items-center gap-2.5 rounded-[8.089px] border-[0.674px] border-solid border-[#9cc4ef] bg-[#FCFCFC] px-3 py-2">
-                      <span class="grid size-8 shrink-0 place-items-center rounded-md border border-[#eeeef0] text-accent">
+                    <div class="attachment ml-[26px] mt-2 flex w-fit items-center gap-2.5 rounded-[8.089px] border-[0.674px] border-solid border-[#b3d0ee] bg-[#f6f7f8] px-3 py-2">
+                      <span class="grid size-8 shrink-0 place-items-center rounded-md border border-[#eceef0] text-accent">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
                           <path d="M6 2h9l3 3v17a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1Z" />
                           <path d="M9 8h6M9 12h6M9 16h4" />
                         </svg>
                       </span>
                       <span class="flex flex-col">
-                        <span class="text-[11px] font-semibold leading-[1.3] text-[#070715]">{m.attachment.title}</span>
-                        <span class="text-[10px] leading-[1.3] text-[#9191a9]">{m.attachment.sub}</span>
+                        <span class="text-[11px] font-semibold leading-[1.3] text-[#1e2124]">{m.attachment.title}</span>
+                        <span class="text-[10px] leading-[1.3] text-[#8b9299]">{m.attachment.sub}</span>
                       </span>
                     </div>
                   )}
@@ -216,14 +216,14 @@ const threads = {
       border-color 0.2s ease;
   }
   .tab[aria-selected="true"] {
-    background: #1e215e;
-    border-color: #1e215e;
+    background: #244b78;
+    border-color: #244b78;
   }
   .tab[aria-selected="true"] .tab-title {
     color: #ffffff;
   }
   .tab[aria-selected="true"] .tab-sub {
-    color: #9cc4ef;
+    color: #b3d0ee;
   }
   .panel[hidden] {
     display: none;

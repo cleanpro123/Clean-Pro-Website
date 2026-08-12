@@ -1,0 +1,66 @@
+---
+// Section header used across every section below the hero — the same eyebrow
+// pill / display title / lead paragraph rhythm as the Saj Innovative site.
+interface Props {
+  eyebrow?: string;
+  title: string;
+  highlight?: string;
+  subtitle?: string;
+  align?: "center" | "left";
+  tone?: "light" | "dark";
+  class?: string;
+}
+
+const {
+  eyebrow,
+  title,
+  highlight,
+  subtitle,
+  align = "center",
+  tone = "light",
+  class: className = "",
+} = Astro.props;
+
+const centered = align === "center";
+const dark = tone === "dark";
+---
+
+<div
+  class={`${centered ? "mx-auto max-w-2xl text-center" : "max-w-2xl"} ${className}`}
+>
+  {
+    eyebrow && (
+      <span
+        class={`inline-flex items-center gap-2 rounded-full border px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.16em] ${
+          dark
+            ? "border-white/15 bg-white/5 text-teal-400"
+            : "border-teal-100 bg-teal-50 text-teal-600"
+        }`}
+      >
+        <span class="h-1.5 w-1.5 rounded-full bg-teal-500" />
+        {eyebrow}
+      </span>
+    )
+  }
+
+  <h2
+    class={`mt-5 font-display text-3xl font-extrabold leading-tight tracking-tight sm:text-4xl ${
+      dark ? "text-white" : "text-ink-900"
+    }`}
+  >
+    {title}
+    {highlight && <span class="text-brand-500"> {highlight}</span>}
+  </h2>
+
+  {
+    subtitle && (
+      <p
+        class={`mt-4 text-base leading-relaxed ${dark ? "text-white/65" : "text-ink-500"} ${
+          centered ? "mx-auto max-w-xl" : ""
+        }`}
+      >
+        {subtitle}
+      </p>
+    )
+  }
+</div>
