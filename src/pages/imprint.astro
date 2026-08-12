@@ -25,17 +25,17 @@ const toc = [
   <main class="bg-white">
     <!-- header -->
     <header
-      class="border-b border-[#eeeef0] px-6 pb-12 pt-28 sm:pt-32"
-      style="background:linear-gradient(180deg,#f4f4fb 0%,#ffffff 100%)"
+      class="border-b border-[#eceef0] px-6 pb-12 pt-28 sm:pt-32"
+      style="background:linear-gradient(180deg,#f6f7f8 0%,#ffffff 100%)"
     >
       <div class="mx-auto max-w-5xl">
-        <span class="inline-flex items-center rounded-[40px] bg-[#eeeef0] px-3.5 py-1.5 text-[12px] font-medium text-[#0d0f29]">
+        <span class="inline-flex items-center rounded-[40px] bg-[#eceef0] px-3.5 py-1.5 text-[12px] font-medium text-[#1e2124]">
           Legal
         </span>
-        <h1 class="mt-3 font-display text-[clamp(1.8rem,4vw,2.6rem)] font-normal tracking-[-0.03em] text-[#0d0f29]">
+        <h1 class="mt-3 font-display text-[clamp(1.8rem,4vw,2.6rem)] font-normal tracking-[-0.03em] text-[#1e2124]">
           Imprint
         </h1>
-        <p class="mt-3 max-w-2xl text-[15px] leading-relaxed text-[#616175]">
+        <p class="mt-3 max-w-2xl text-[15px] leading-relaxed text-[#4c5257]">
           Legal information and disclosures for Clean Pro Laundry Co., the company
           that operates the Clean Pro laundry and dry cleaning service.
         </p>
@@ -46,12 +46,12 @@ const toc = [
     <div class="mx-auto max-w-5xl px-6 py-12 sm:py-16 lg:flex lg:gap-12">
       <!-- Table of contents -->
       <aside class="mb-10 lg:mb-0 lg:w-[240px] lg:shrink-0">
-        <div class="rounded-2xl border border-[#dedee2] bg-[#eeeef0] p-5 lg:sticky lg:top-28">
-          <p class="text-[15px] font-semibold text-[#0d0f29]">Table of contents</p>
+        <div class="rounded-2xl border border-[#d5d9dd] bg-[#eceef0] p-5 lg:sticky lg:top-28">
+          <p class="text-[15px] font-semibold text-[#1e2124]">Table of contents</p>
           <nav class="mt-4 flex flex-col gap-2.5 text-[13px]">
             {
               toc.map((t) => (
-                <a href={`#${t.id}`} class="text-[#616175] transition-colors hover:text-[#0d0f29]">
+                <a href={`#${t.id}`} class="text-[#4c5257] transition-colors hover:text-[#1e2124]">
                   {t.label}
                 </a>
               ))
@@ -63,33 +63,33 @@ const toc = [
       <!-- main content -->
       <div class="min-w-0 flex-1 space-y-12">
         <section id="company" class="scroll-mt-28">
-          <h2 class="text-[22px] font-semibold text-[#32344d]">1 / Company Information</h2>
-          <p class="mt-4 text-[15px] leading-relaxed text-[#616175]">
+          <h2 class="text-[22px] font-semibold text-[#2c3033]">1 / Company Information</h2>
+          <p class="mt-4 text-[15px] leading-relaxed text-[#4c5257]">
             This website is operated by:
           </p>
-          <p class="mt-3 text-[15px] font-medium leading-7 text-[#2a2c46]">
+          <p class="mt-3 text-[15px] font-medium leading-7 text-[#3a3f44]">
             Clean Pro Laundry Co.<br />
             128 Riverside Avenue<br />
             Downtown District<br />
             City, 10001
           </p>
-          <p class="mt-3 text-[15px] leading-relaxed text-[#616175]">
+          <p class="mt-3 text-[15px] leading-relaxed text-[#4c5257]">
             Legal form: Limited liability company, registered and operating under
             applicable local law.
           </p>
         </section>
 
         <section id="contact" class="scroll-mt-28">
-          <h2 class="text-[22px] font-semibold text-[#32344d]">2 / Contact</h2>
-          <ul class="mt-4 space-y-1.5 text-[15px] leading-relaxed text-[#616175]">
-            <li>Email: <a href="mailto:hello@cleanpro.com" class="font-medium text-[#5256a3] hover:underline">hello@cleanpro.com</a></li>
-            <li>Phone: <a href="tel:+18005550142" class="font-medium text-[#5256a3] hover:underline">+1 (800) 555-0142</a></li>
-            <li>Website: <a href="https://cleanpro.com" class="font-medium text-[#5256a3] hover:underline">cleanpro.com</a></li>
+          <h2 class="text-[22px] font-semibold text-[#2c3033]">2 / Contact</h2>
+          <ul class="mt-4 space-y-1.5 text-[15px] leading-relaxed text-[#4c5257]">
+            <li>Email: <a href="mailto:hello@cleanpro.com" class="font-medium text-[#3a76b8] hover:underline">hello@cleanpro.com</a></li>
+            <li>Phone: <a href="tel:+18005550142" class="font-medium text-[#3a76b8] hover:underline">+1 (800) 555-0142</a></li>
+            <li>Website: <a href="https://cleanpro.com" class="font-medium text-[#3a76b8] hover:underline">cleanpro.com</a></li>
           </ul>
 
-          <div class="mt-5 rounded-r-lg border-l-4 border-[#5256a3] bg-[rgba(82,86,163,0.1)] px-5 py-4">
-            <p class="text-[12px] font-semibold uppercase tracking-[0.08em] text-[#5256a3]">Good to know</p>
-            <p class="mt-2 text-[14px] leading-relaxed text-[#32344d]">
+          <div class="mt-5 rounded-r-lg border-l-4 border-[#3a76b8] bg-[rgba(82,86,163,0.1)] px-5 py-4">
+            <p class="text-[12px] font-semibold uppercase tracking-[0.08em] text-[#3a76b8]">Good to know</p>
+            <p class="mt-2 text-[14px] leading-relaxed text-[#2c3033]">
               For data-protection and privacy enquiries, please refer to our
               Privacy Policy. For security disclosures, see our Vulnerability
               Disclosure policy.
@@ -98,8 +98,8 @@ const toc = [
         </section>
 
         <section id="register" class="scroll-mt-28">
-          <h2 class="text-[22px] font-semibold text-[#32344d]">3 / Registration &amp; VAT</h2>
-          <ul class="mt-4 space-y-1.5 text-[15px] leading-relaxed text-[#616175]">
+          <h2 class="text-[22px] font-semibold text-[#2c3033]">3 / Registration &amp; VAT</h2>
+          <ul class="mt-4 space-y-1.5 text-[15px] leading-relaxed text-[#4c5257]">
             <li>Trade register: Local Companies Register</li>
             <li>Registration number: 000000</li>
             <li>VAT identification number: 00000000</li>
@@ -107,20 +107,20 @@ const toc = [
         </section>
 
         <section id="management" class="scroll-mt-28">
-          <h2 class="text-[22px] font-semibold text-[#32344d]">4 / Authorized Representatives</h2>
-          <p class="mt-4 text-[15px] leading-relaxed text-[#616175]">
+          <h2 class="text-[22px] font-semibold text-[#2c3033]">4 / Authorized Representatives</h2>
+          <p class="mt-4 text-[15px] leading-relaxed text-[#4c5257]">
             Authorized to represent the company (Managing Director): the
             management of Clean Pro Laundry Co.
           </p>
-          <p class="mt-3 text-[15px] leading-relaxed text-[#616175]">
+          <p class="mt-3 text-[15px] leading-relaxed text-[#4c5257]">
             Responsible for the content of this website pursuant to applicable
             media law: Clean Pro Laundry Co., at the address stated above.
           </p>
         </section>
 
         <section id="dispute" class="scroll-mt-28">
-          <h2 class="text-[22px] font-semibold text-[#32344d]">5 / Online Dispute Resolution</h2>
-          <p class="mt-4 text-[15px] leading-relaxed text-[#616175]">
+          <h2 class="text-[22px] font-semibold text-[#2c3033]">5 / Online Dispute Resolution</h2>
+          <p class="mt-4 text-[15px] leading-relaxed text-[#4c5257]">
             Where required, consumers may have access to an online dispute
             resolution platform provided by the relevant authorities. Clean Pro
             Laundry Co. is neither obligated nor willing to participate in a
@@ -129,8 +129,8 @@ const toc = [
         </section>
 
         <section id="content" class="scroll-mt-28">
-          <h2 class="text-[22px] font-semibold text-[#32344d]">6 / Liability for Content</h2>
-          <p class="mt-4 text-[15px] leading-relaxed text-[#616175]">
+          <h2 class="text-[22px] font-semibold text-[#2c3033]">6 / Liability for Content</h2>
+          <p class="mt-4 text-[15px] leading-relaxed text-[#4c5257]">
             The contents of this website have been created with the greatest
             possible care. However, we cannot guarantee that the contents are
             accurate, complete, or up to date. As a service provider, we are
@@ -141,8 +141,8 @@ const toc = [
         </section>
 
         <section id="links" class="scroll-mt-28">
-          <h2 class="text-[22px] font-semibold text-[#32344d]">7 / Liability for Links</h2>
-          <p class="mt-4 text-[15px] leading-relaxed text-[#616175]">
+          <h2 class="text-[22px] font-semibold text-[#2c3033]">7 / Liability for Links</h2>
+          <p class="mt-4 text-[15px] leading-relaxed text-[#4c5257]">
             Our website contains links to external third-party websites over whose
             content we have no influence. We therefore accept no liability for this
             external content. The respective provider or operator of the linked
@@ -151,14 +151,14 @@ const toc = [
         </section>
 
         <section id="copyright" class="scroll-mt-28">
-          <h2 class="text-[22px] font-semibold text-[#32344d]">8 / Copyright</h2>
-          <p class="mt-4 text-[15px] leading-relaxed text-[#616175]">
+          <h2 class="text-[22px] font-semibold text-[#2c3033]">8 / Copyright</h2>
+          <p class="mt-4 text-[15px] leading-relaxed text-[#4c5257]">
             The content and works created by the operators on these pages are
             subject to copyright. Reproduction, processing, distribution, and any
             kind of exploitation outside the limits of copyright require the prior
             written consent of Clean Pro Laundry Co.
           </p>
-          <p class="mt-6 text-[13px] text-[#9191a9]">Last updated: June 2026</p>
+          <p class="mt-6 text-[13px] text-[#8b9299]">Last updated: June 2026</p>
         </section>
       </div>
     </div>

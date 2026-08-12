@@ -1,189 +1,197 @@
 @import "tailwindcss";
 
 @theme {
-  /* ── Clean Pro brand palette (fresh laundry blues, navy, mint) ── */
+  /* ── Palette, shared with the Saj Innovative site ──────────────────────
+     ink   = neutral greys / near-black,  brand = blue,  teal = accent.
+     The older Clean Pro token names (navy, lav-*, cloud-*, signal-*, …) are
+     kept below and re-pointed at this palette so existing utility classes
+     keep working. */
+  --color-ink-50: #f6f7f8;
+  --color-ink-100: #eceef0;
+  --color-ink-200: #d5d9dd;
+  --color-ink-300: #b9bfc4;
+  --color-ink-400: #8b9299;
+  --color-ink-500: #656c73;
+  --color-ink-600: #4c5257;
+  --color-ink-700: #3a3f44;
+  --color-ink-800: #2c3033;
+  --color-ink-900: #1e2124;
 
-  /* Signal Void (near-black ink) */
-  --color-ink: #0d0f29;        /* Signal Void 600 (Main) */
-  --color-ink-soft: #32344d;   /* Signal Void 500 */
-  --color-ink-deep: #070715;   /* Signal Void 900 */
-  --color-signal-50: #e7e7ea;
-  --color-signal-100: #b7b7c0;
-  --color-signal-200: #878796;
-  --color-signal-300: #57576d;
-  --color-signal-400: #32344d;
-  --color-signal-900: #070715;
+  --color-brand-50: #eef5fc;
+  --color-brand-100: #d8e8f7;
+  --color-brand-200: #b3d0ee;
+  --color-brand-400: #5a95d1;
+  --color-brand-500: #3a76b8;
+  --color-brand-600: #2e6099;
+  --color-brand-700: #244b78;
 
-  /* Deep Nexus (indigo / navy + lavender ramp) */
-  --color-navy: #1e215e;       /* Deep Nexus 500 */
-  --color-navy-700: #1b1e55;   /* Deep Nexus 600 */
-  --color-nexus: #201f5e;      /* Deep Nexus (brand) */
-  --color-nexus-700: #171946;
-  --color-nexus-800: #121438;
-  --color-nexus-900: #0d0f2a;
+  --color-teal-50: #e9fbf7;
+  --color-teal-100: #c9f5ec;
+  --color-teal-400: #2bc4ad;
+  --color-teal-500: #14b8a6;
+  --color-teal-600: #0e9587;
 
-  --color-lav-50: #f4f4fb;
-  --color-lav-100: #e9e9f6;
-  --color-lav-200: #d6d6ec;    /* Deep Nexus 50 */
-  --color-lav-300: #aaacd4;    /* Deep Nexus 100 */
-  --color-lav-400: #7e80bb;    /* Deep Nexus 200 */
-  --color-lav-500: #5256a3;    /* Deep Nexus 300 */
+  /* ── Legacy Clean Pro names, remapped onto the palette above ── */
+  --color-ink: #1e2124;
+  --color-ink-soft: #4c5257;
+  --color-ink-deep: #16181a;
 
-  /* Clean Pro accent — fresh laundry blue */
-  --color-accent: #1f8fe0;
-  --color-accent-hover: #1878bd;
+  --color-signal-50: #f6f7f8;
+  --color-signal-100: #d5d9dd;
+  --color-signal-200: #8b9299;
+  --color-signal-300: #656c73;
+  --color-signal-400: #3a3f44;
+  --color-signal-900: #16181a;
 
-  /* Synth Mint */
-  --color-mint: #37dfbd;       /* Synth Mint 500 (Main) */
-  --color-mint-400: #58e3c7;
-  --color-mint-300: #75e8d1;
+  --color-navy: #1e2124;
+  --color-navy-700: #2c3033;
+  --color-nexus: #2c3033;
+  --color-nexus-700: #24282b;
+  --color-nexus-800: #1e2124;
+  --color-nexus-900: #16181a;
 
-  /* Data Cloud (cool greys / surfaces) */
-  --color-cloud-50: #fafafa;
-  --color-cloud-100: #eeeef0;
-  --color-cloud-200: #dedee2;
-  --color-cloud-300: #cbcbd1;
-  --color-cloud-400: #a8a8b3;
-  --color-cloud-500: #848494;
-  --color-cloud-600: #616175;
-  --color-cloud-700: #43435b;
-  --color-cloud-900: #1a1c38;
+  --color-lav-50: #f6f7f8;
+  --color-lav-100: #eceef0;
+  --color-lav-200: #d5d9dd;
+  --color-lav-300: #b9bfc4;
+  --color-lav-400: #8b9299;
+  --color-lav-500: #656c73;
 
-  /* Base (Onest text greys) */
-  --color-base-100: #e4e4f0;
-  --color-base-400: #9191a9;
-  --color-base-500: #6f6f8f;
-  --color-base-600: #5a5a80;
-  --color-base-800: #2e2e4a;
-  --color-base-900: #1a1a2f;
+  --color-accent: #3a76b8;         /* brand/500 */
+  --color-accent-hover: #2e6099;   /* brand/600 */
 
-  --color-muted: #6f6f8f;      /* base/500 */
+  --color-mint: #14b8a6;           /* teal/500 */
+  --color-mint-400: #2bc4ad;
+  --color-mint-300: #c9f5ec;
 
-  /* Fonts — Onest (body/UI), Exo 2 (section headings), Manrope (alt display) */
-  --font-display: "Exo 2", ui-sans-serif, system-ui, sans-serif;
-  --font-display-alt: "Manrope", ui-sans-serif, system-ui, sans-serif;
-  --font-sans: "Onest", ui-sans-serif, system-ui, sans-serif;
-  --font-geist: "Geist", ui-sans-serif, system-ui, sans-serif;
-  --font-sora: "Sora", ui-sans-serif, system-ui, sans-serif;
+  --color-cloud-50: #f6f7f8;
+  --color-cloud-100: #eceef0;
+  --color-cloud-200: #d5d9dd;
+  --color-cloud-300: #b9bfc4;
+  --color-cloud-400: #8b9299;
+  --color-cloud-500: #656c73;
+  --color-cloud-600: #4c5257;
+  --color-cloud-700: #3a3f44;
+  --color-cloud-900: #1e2124;
+
+  --color-base-100: #eceef0;
+  --color-base-400: #8b9299;
+  --color-base-500: #656c73;
+  --color-base-600: #4c5257;
+  --color-base-800: #2c3033;
+  --color-base-900: #1e2124;
+
+  --color-muted: #656c73;
+
+  /* Fonts — Inter (body/UI), Plus Jakarta Sans (display).
+     The older font-geist / font-sora / font-display-alt utilities resolve to
+     the same pair so nothing falls back to a system stack. */
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Plus Jakarta Sans", "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display-alt: "Plus Jakarta Sans", "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-geist: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-sora: "Plus Jakarta Sans", "Inter", ui-sans-serif, system-ui, sans-serif;
 
   /* Radii */
-  --radius-card: 1.25rem;
+  --radius-card: 1.5rem;
 }
 
-html {
-  scroll-behavior: smooth;
+/* Base defaults live in Tailwind's `base` layer so any text-* / font-*
+   utility on the element still wins — an unlayered rule here would beat
+   every utility and, for example, force white headings back to ink. */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    /* keep anchored sections clear of the fixed navbar */
+    scroll-padding-top: 6.5rem;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    color: var(--color-ink-600);
+    background-color: #ffffff;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Taps on links/buttons shouldn't wait on double-tap-zoom detection, and the
+     grey tap flash on iOS reads as a bug on the glass surfaces. */
+  a, button, [role="button"] {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  h1, h2, h3, h4, h5 {
+    font-family: var(--font-display);
+    color: var(--color-ink-900);
+    letter-spacing: -0.02em;
+  }
 }
 
-body {
-  font-family: var(--font-sans);
-  color: var(--color-ink);
-  background-color: #ffffff;
-  -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
+.container-x {
+  margin-inline: auto;
+  width: 100%;
+  max-width: 80rem; /* max-w-7xl */
+  padding-inline: 1.25rem;
 }
-
-/* Taps on links/buttons shouldn't wait on double-tap-zoom detection, and the
-   grey tap flash on iOS reads as a bug on the glass surfaces. */
-a, button, [role="button"] {
-  touch-action: manipulation;
-  -webkit-tap-highlight-color: transparent;
+@media (min-width: 640px) {
+  .container-x {
+    padding-inline: 2rem;
+  }
 }
-
-h1, h2, h3, h4, h5 {
-  font-family: var(--font-display);
-  letter-spacing: -0.02em;
+@media (min-width: 1024px) {
+  .container-x {
+    padding-inline: 3rem;
+  }
 }
 
 /* ── Navbar ──────────────────────────────────────────────────────────────
-   Two states: dark glass while the bar floats over the hero's sphere pit,
-   and the light glass pill once the page scrolls onto white sections.
-   ID selectors here so they win over the Tailwind utilities on the markup. */
-#site-header.is-scrolled {
-  padding-top: 0.6rem;
+   A solid white bar that sits flush inside the hero card's top edge (square
+   top corners, rounded bottom ones), then rounds into a floating pill once
+   the page scrolls past the hero's edge. ID selectors here so they win over
+   the Tailwind utilities on the markup. */
+#site-header {
+  padding-top: 0.75rem;
+}
+@media (min-width: 640px) {
+  #site-header {
+    padding-top: 1rem;
+  }
+}
+
+#site-nav {
+  border-radius: 0 0 22px 22px;
+  box-shadow: 0 10px 30px rgba(30, 33, 36, 0.08);
+}
+#site-header.is-scrolled #site-nav {
+  border-radius: 999px;
+  box-shadow: 0 14px 40px rgba(30, 33, 36, 0.16);
 }
 
 #site-nav .logo-text {
-  color: #ffffff;
-  transition: color 0.5s ease;
+  color: var(--color-ink-900);
 }
 
-#site-nav .nav-links a {
-  color: rgba(255, 255, 255, 0.62);
-  transition: color 0.2s ease;
+#site-nav .nav-links a,
+#site-nav .nav-signin {
+  color: var(--color-ink-600);
+  transition:
+    color 0.2s ease,
+    background-color 0.2s ease;
 }
-#site-nav .nav-links a:hover {
-  color: #ffffff;
-}
-
-#site-nav #nav-cta {
-  background: #ffffff;
-  color: var(--color-ink);
-}
-#site-nav #nav-cta:hover {
-  background: var(--color-lav-100);
+#site-nav .nav-links a:hover,
+#site-nav .nav-signin:hover {
+  color: var(--color-ink-900);
 }
 
-/* Scrolled — light pill on light page */
-#site-header.is-scrolled #site-nav {
-  border-color: rgba(255, 255, 255, 0.3);
-  background: rgba(255, 255, 255, 0.7);
-  box-shadow: 0 9px 30px rgba(26, 29, 78, 0.12);
+/* Top-level links sit in pills; the one for the section in view is tinted. */
+#site-nav .nav-link:hover {
+  background-color: var(--color-ink-50);
 }
-#site-header.is-scrolled #site-nav .logo-text {
-  color: var(--color-ink);
-}
-#site-header.is-scrolled #site-nav .nav-links a {
-  color: color-mix(in srgb, var(--color-navy) 80%, transparent);
-}
-#site-header.is-scrolled #site-nav .nav-links a:hover {
-  color: var(--color-navy);
-}
-#site-header.is-scrolled #site-nav #nav-cta {
-  background: var(--color-navy);
-  color: #ffffff;
-}
-#site-header.is-scrolled #site-nav #nav-cta:hover {
-  background: var(--color-navy-700);
-}
-
-/* Even glassy hairline border — uniform all the way around the pill */
-#site-nav::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  padding: 1px;
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.18) 0%,
-    rgba(255, 255, 255, 0.06) 100%
-  );
-  -webkit-mask:
-    linear-gradient(#000 0 0) content-box,
-    linear-gradient(#000 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  pointer-events: none;
-  transition: background 0.5s ease;
-}
-#site-header.is-scrolled #site-nav::before {
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.85) 0%,
-    rgba(255, 255, 255, 0.55) 100%
-  );
-}
-
-
-/* Footer dotted world map — hemispheres glide closer on hover */
-.world-map .hemi {
-  transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
-}
-.world-map:hover .hemi-w {
-  transform: translateX(26px);
-}
-.world-map:hover .hemi-e {
-  transform: translateX(-26px);
+#site-nav .nav-link.is-active {
+  background-color: var(--color-brand-50);
+  color: var(--color-brand-600);
+  font-weight: 600;
 }
 
 /* Hide scrollbar for carousels */
@@ -199,7 +207,7 @@ h1, h2, h3, h4, h5 {
 @keyframes fade-up {
   from {
     opacity: 0;
-    transform: translateY(16px);
+    transform: translateY(18px);
   }
   to {
     opacity: 1;
@@ -214,6 +222,20 @@ h1, h2, h3, h4, h5 {
   animation: fade-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.animate-rise {
+  animation: rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
 /* Respect reduced-motion: show content immediately, no entrance animation */
 @media (prefers-reduced-motion: reduce) {
   html {
@@ -222,5 +244,8 @@ h1, h2, h3, h4, h5 {
   .reveal {
     opacity: 1;
     animation: none !important;
+  }
+  .animate-rise {
+    animation: none;
   }
 }

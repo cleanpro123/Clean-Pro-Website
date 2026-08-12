@@ -1,4 +1,6 @@
 ---
+// Eyebrow pill — same treatment as the one inside SectionHeading, for the
+// places that need the label on its own.
 interface Props {
   variant?: "light" | "dark";
   class?: string;
@@ -6,12 +8,13 @@ interface Props {
 const { variant = "light", class: className = "" } = Astro.props;
 const styles =
   variant === "dark"
-    ? "border-white/15 bg-white/5 text-lav-200"
-    : "border-transparent bg-cloud-100/50 text-ink-soft";
+    ? "border-white/15 bg-white/5 text-teal-400"
+    : "border-teal-100 bg-teal-50 text-teal-600";
 ---
 
 <span
-  class={`inline-flex items-center rounded-full border px-3 py-1.5 text-[13px] font-medium ${styles} ${className}`}
+  class={`inline-flex items-center gap-2 rounded-full border px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.16em] ${styles} ${className}`}
 >
+  <span class="h-1.5 w-1.5 rounded-full bg-teal-500" aria-hidden="true"></span>
   <slot />
 </span>
