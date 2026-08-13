@@ -1,11 +1,15 @@
 ---
-// Floating section dock — the rounded right-side rail from the Saj Innovative
-// site. Appears once the hero is behind you and tracks the section in view.
+// Section rail, pinned to the right edge on large screens — a bare column of
+// tick marks, no panel. It takes over wayfinding once the hero is behind you:
+// the active section's tick stretches, and labels only surface on hover.
+//
+// Ids must be listed in document order — the active-section measurement below
+// walks the list and keeps the last one that has crossed the reading line.
 const sections = [
   { id: "top", label: "Home" },
   { id: "features", label: "Why Clean Pro" },
-  { id: "services", label: "Services" },
   { id: "how", label: "How it works" },
+  { id: "services", label: "Services" },
   { id: "faq", label: "FAQ" },
   { id: "contact", label: "Contact" },
 ];
@@ -14,26 +18,23 @@ const sections = [
 <nav
   id="section-dock"
   aria-label="Page sections"
-  class="pointer-events-none fixed right-3 top-1/2 z-40 hidden -translate-y-1/2 translate-x-6 rounded-full border border-white/70 bg-brand-50/85 px-3.5 py-5 opacity-0 shadow-[0_18px_45px_-25px_rgba(30,33,36,0.5)] backdrop-blur-md transition-all duration-300 xl:block 2xl:right-6"
+  class="section-dock fixed right-5 top-1/2 z-40 hidden -translate-y-1/2 xl:block 2xl:right-7"
 >
-  <ul class="flex flex-col items-end gap-4">
+  <ul class="flex flex-col items-end gap-1.5">
     {
-      sections.map((s) => (
-        <li class="w-full">
+      sections.map((section) => (
+        <li>
           <a
-            href={`#${s.id}`}
-            data-section={s.id}
+            href={`#${section.id}`}
+            data-dock-link={section.id}
             tabindex="-1"
-            class="dock-item group/item flex items-center justify-end gap-3"
+            class="dock-item relative flex items-center justify-end py-[5px]"
           >
-            <span class="dock-label whitespace-nowrap text-right text-sm font-medium text-ink-600 transition-colors group-hover/item:text-ink-900">
-              {s.label}
+            {/* Out of flow, so revealing it can't nudge the ticks sideways */}
+            <span class="dock-label absolute right-full mr-2.5 whitespace-nowrap text-[12px] font-medium">
+              {section.label}
             </span>
-
-            {/* Marker — the current section stretches into a bar */}
-            <span class="flex h-6 w-2 shrink-0 items-center justify-center">
-              <span class="dock-marker h-2 w-2 rounded-full bg-ink-400 transition-all duration-300 group-hover/item:h-3 group-hover/item:bg-ink-600" />
-            </span>
+            <span class="dock-tick" />
           </a>
         </li>
       ))
@@ -41,49 +42,177 @@ const sections = [
   </ul>
 </nav>
 
-<style>
-  #section-dock.is-visible {
-    pointer-events: auto;
-    opacity: 1;
-    transform: translate(0, -50%);
-  }
-  .dock-item.is-active .dock-label {
-    font-weight: 600;
-    color: var(--color-brand-600);
-  }
-  .dock-item.is-active .dock-marker {
-    height: 1.5rem;
-    background: var(--color-brand-500);
-  }
-</style>
-
 <script>
   const dock = document.getElementById("section-dock");
   if (dock) {
-    const items = Array.from(dock.querySelectorAll<HTMLAnchorElement>(".dock-item"));
-    const targets = items
-      .map((item) => ({
-        item,
-        el: document.getElementById(item.dataset.section ?? ""),
-      }))
-      .filter((t): t is { item: HTMLAnchorElement; el: HTMLElement } => Boolean(t.el));
+    const links = Array.from(
+      dock.querySelectorAll<HTMLAnchorElement>("[data-dock-link]"),
+    );
+    const nodes = links
+      .map((link) => document.getElementById(link.dataset.dockLink!))
+      .filter((node): node is HTMLElement => Boolean(node));
 
-    const onScroll = () => {
-      // Only worth showing once the visitor is past the hero.
-      const visible = window.scrollY > window.innerHeight * 0.7;
-      dock.classList.toggle("is-visible", visible);
-      items.forEach((i) => i.setAttribute("tabindex", visible ? "0" : "-1"));
+    // Panels with a near-black backdrop, marked with `data-dock-dark`. The rail
+    // floats free of any plate, so it has to invert over these or it disappears
+    // into them. The CTA banner has no tick of its own but still passes under
+    // the rail.
+    const darkZones = Array.from(
+      document.querySelectorAll<HTMLElement>("[data-dock-dark]"),
+    );
 
-      // Whichever section has crossed the reading line is the current one.
-      const line = window.scrollY + window.innerHeight * 0.3;
-      let current = targets[0];
-      for (const t of targets) {
-        if (t.el.offsetTop <= line) current = t;
+    let active = "";
+    let onDark = false;
+
+    const sync = () => {
+      if (!nodes.length) return;
+
+      // Which section the reader is on, measured against a line 40% down the
+      // viewport: the last one whose top has crossed it. A thin
+      // IntersectionObserver band only reports on crossings, so it can leave
+      // the highlight stranded on a section that has long since scrolled away
+      // — measuring outright gives the right answer at any offset.
+      const doc = document.documentElement;
+      let current: string;
+
+      // The footer fills the last screenful, so the final section would never
+      // reach the reading line on its own.
+      if (window.scrollY + window.innerHeight >= doc.scrollHeight - 4) {
+        current = nodes[nodes.length - 1].id;
+      } else {
+        const line = window.scrollY + window.innerHeight * 0.4;
+        current = nodes[0].id;
+        for (const node of nodes) {
+          if (node.getBoundingClientRect().top + window.scrollY <= line) {
+            current = node.id;
+          }
+        }
       }
-      targets.forEach((t) => t.item.classList.toggle("is-active", t === current));
+
+      if (current !== active) {
+        active = current;
+        for (const link of links) {
+          const isActive = link.dataset.dockLink === active;
+          link.classList.toggle("is-active", isActive);
+          if (isActive) link.setAttribute("aria-current", "true");
+          else link.removeAttribute("aria-current");
+        }
+      }
+
+      // Whatever the rail itself is sitting on, which is not always the active
+      // section — the CTA banner passes behind it while FAQ is still the one
+      // being read. Reaching the middle vertically is not enough: a dark card
+      // in the left column never passes under the rail, so the panel has to run
+      // out to the right edge as well.
+      const middle = window.innerHeight / 2;
+      const edge = window.innerWidth - 80;
+      const dark = darkZones.some((node) => {
+        const rect = node.getBoundingClientRect();
+        return rect.top < middle && rect.bottom > middle && rect.right >= edge;
+      });
+      if (dark !== onDark) {
+        onDark = dark;
+        dock.classList.toggle("is-on-dark", dark);
+      }
     };
 
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
+    sync();
+    window.addEventListener("scroll", sync, { passive: true });
+    window.addEventListener("resize", sync);
+
+    // On duty only once the hero is fully out of view.
+    const hero = document.getElementById("top");
+    const setOnDuty = (onDuty: boolean) => {
+      dock.classList.toggle("is-visible", onDuty);
+      for (const link of links) link.tabIndex = onDuty ? 0 : -1;
+    };
+
+    if (hero) {
+      new IntersectionObserver(([entry]) => setOnDuty(!entry.isIntersecting), {
+        threshold: 0,
+      }).observe(hero);
+    }
   }
 </script>
+
+<style>
+  /* Parked off to the right while off duty, so the handover reads as the rail
+     sliding in from the edge rather than blinking into place. */
+  .section-dock {
+    --tick: rgba(30, 33, 36, 0.25);
+    --tick-hover: rgba(30, 33, 36, 0.45);
+    --tick-active: var(--color-brand-500);
+    --label: rgba(58, 63, 68, 0.85);
+
+    opacity: 0;
+    transform: translate(1.25rem, -50%);
+    pointer-events: none;
+    transition:
+      opacity 300ms cubic-bezier(0.22, 1, 0.36, 1),
+      transform 300ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  /* No panel to sit on, so the rail inverts over the near-black sections
+     instead of vanishing into them. */
+  .section-dock.is-on-dark {
+    --tick: rgba(255, 255, 255, 0.28);
+    --tick-hover: rgba(255, 255, 255, 0.6);
+    --tick-active: #ffffff;
+    --label: rgba(255, 255, 255, 0.85);
+  }
+
+  .section-dock.is-visible {
+    opacity: 1;
+    transform: translate(0, -50%);
+    pointer-events: auto;
+  }
+
+  .dock-tick {
+    display: block;
+    height: 2px;
+    width: 14px;
+    border-radius: 999px;
+    background: var(--tick);
+    transition:
+      width 250ms cubic-bezier(0.22, 1, 0.36, 1),
+      background-color 200ms linear;
+  }
+
+  .dock-item:hover .dock-tick {
+    width: 20px;
+    background: var(--tick-hover);
+  }
+
+  .dock-item.is-active .dock-tick,
+  .dock-item.is-active:hover .dock-tick {
+    width: 24px;
+    background: var(--tick-active);
+  }
+
+  /* Labels stay out of the way until you reach for one. */
+  .dock-label {
+    color: var(--label);
+    opacity: 0;
+    transform: translateX(4px);
+    pointer-events: none;
+    transition:
+      opacity 180ms ease,
+      transform 180ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .dock-item:hover .dock-label,
+  .dock-item:focus-visible .dock-label {
+    opacity: 1;
+    transform: none;
+  }
+
+  .dock-item:focus-visible {
+    outline: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .section-dock {
+      transition: opacity 300ms linear;
+      transform: translate(0, -50%);
+    }
+  }
+</style>

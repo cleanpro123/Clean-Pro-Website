@@ -151,20 +151,21 @@
    the page scrolls past the hero's edge. ID selectors here so they win over
    the Tailwind utilities on the markup. */
 #site-header {
-  padding-top: 0.75rem;
+  padding-top: 1.25rem;
 }
 @media (min-width: 640px) {
   #site-header {
-    padding-top: 1rem;
+    padding-top: 1.5rem;
   }
 }
 
+/* A floating pill in both states — only the shadow deepens once the page
+   scrolls under it. */
 #site-nav {
-  border-radius: 0 0 22px 22px;
+  border-radius: 999px;
   box-shadow: 0 10px 30px rgba(30, 33, 36, 0.08);
 }
 #site-header.is-scrolled #site-nav {
-  border-radius: 999px;
   box-shadow: 0 14px 40px rgba(30, 33, 36, 0.16);
 }
 
@@ -172,15 +173,13 @@
   color: var(--color-ink-900);
 }
 
-#site-nav .nav-links a,
-#site-nav .nav-signin {
+#site-nav .nav-links a {
   color: var(--color-ink-600);
   transition:
     color 0.2s ease,
     background-color 0.2s ease;
 }
-#site-nav .nav-links a:hover,
-#site-nav .nav-signin:hover {
+#site-nav .nav-links a:hover {
   color: var(--color-ink-900);
 }
 
