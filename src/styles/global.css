@@ -151,11 +151,11 @@
    the page scrolls past the hero's edge. ID selectors here so they win over
    the Tailwind utilities on the markup. */
 #site-header {
-  padding-top: 0.75rem;
+  padding-top: 1.25rem;
 }
 @media (min-width: 640px) {
   #site-header {
-    padding-top: 1rem;
+    padding-top: 1.5rem;
   }
 }
 
