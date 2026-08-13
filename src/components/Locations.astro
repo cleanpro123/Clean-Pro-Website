@@ -6,50 +6,35 @@
 // OpenStreetMap tiles if CARTO fails to answer.
 //
 // ─────────────────────────────────────────────────────────────────────────────
-// TODO: replace the three entries below with the real Clean Pro branches.
-// `coords` is [latitude, longitude] — it places the pin AND sets the map's
-// opening bounds, so it has to be right or the map opens over the wrong city.
-// Everything else (name, city, address lines, hours, numbers) is placeholder
-// copy carried over from the rest of the site.
+// TODO: placeholder branch — West Bay, Doha, picked as an example. Street
+// address, hours, numbers and email are all invented and need the real ones.
+// `coords` is [latitude, longitude]; it places the pin AND sets the map's
+// opening view, so it has to be right or the map opens over the wrong district.
+// Adding a second entry needs no other change — the heading, the reset button
+// and the map's framing all key off this list's length.
 // ─────────────────────────────────────────────────────────────────────────────
 const locations = [
   {
-    id: "downtown",
-    name: "Main Depot",
-    city: "Downtown",
-    address: ["128 Riverside Avenue", "Downtown District", "PIN 000000"],
-    hours: ["Monday – Saturday : 7am to 9pm", "Sunday : 9am to 5pm"],
-    mobile: "+1 (800) 555-0142",
-    phone: "+1 (800) 555-0143",
-    email: "hello@cleanpro.com",
-    coords: [51.5079, -0.0877],
-  },
-  {
-    id: "northside",
-    name: "Northside Branch",
-    city: "Northside",
-    address: ["42 Mill Lane", "Northside", "PIN 000000"],
-    hours: ["Monday – Friday : 8am to 8pm", "Saturday : 9am to 5pm"],
-    mobile: "+1 (800) 555-0144",
-    phone: "+1 (800) 555-0145",
-    email: "hello@cleanpro.com",
-    coords: [51.5441, -0.1057],
-  },
-  {
-    id: "harbour",
-    name: "Harbour Branch",
-    city: "Harbour",
-    address: ["7 Quayside Walk", "Harbour Quarter", "PIN 000000"],
-    hours: ["Monday – Friday : 8am to 6pm", "Saturday : 10am to 2pm"],
-    mobile: "+1 (800) 555-0146",
-    phone: "+1 (800) 555-0147",
-    email: "hello@cleanpro.com",
-    coords: [51.4934, -0.0098],
+    id: "west-bay",
+    name: "Clean Pro Doha",
+    city: "West Bay",
+    address: [
+      "Office 12, Al Fardan Office Tower",
+      "West Bay, Al Dafna — Zone 61",
+      "Doha, Qatar",
+    ],
+    hours: ["Saturday – Thursday : 7am to 9pm", "Friday : 2pm to 9pm"],
+    mobile: "+974 5555 0142",
+    phone: "+974 4455 0143",
+    email: "hello@cleanpro.qa",
+    coords: [25.3204, 51.529],
   },
 ].map((office) => ({
   ...office,
   mapHref: `https://www.google.com/maps/dir/?api=1&destination=${office.coords[0]},${office.coords[1]}`,
 }));
+
+const single = locations.length === 1;
 
 // Single-path line icons, same set the reference section uses.
 const icons = {
@@ -81,16 +66,22 @@ const icons = {
         <h2
           class="font-display text-2xl font-extrabold tracking-tight text-ink-900"
         >
-          Our locations
+          {single ? "Our location" : "Our locations"}
         </h2>
-        <button
-          type="button"
-          id="locations-reset"
-          hidden
-          class="text-xs font-semibold text-brand-500 underline underline-offset-4 transition-colors hover:text-brand-700"
-        >
-          Show all locations
-        </button>
+        {
+          /* Nothing to zoom back out to with a single pin, so the reset only
+             earns its place once there is more than one. */
+          !single && (
+            <button
+              type="button"
+              id="locations-reset"
+              hidden
+              class="text-xs font-semibold text-brand-500 underline underline-offset-4 transition-colors hover:text-brand-700"
+            >
+              Show all locations
+            </button>
+          )
+        }
       </div>
 
       <div class="mt-6 grid gap-5 lg:grid-cols-[1fr_1.1fr]">
@@ -251,7 +242,14 @@ const icons = {
         </div>
 
         <!-- Map -->
-        <div class="lg:sticky lg:top-32 lg:h-[calc(100vh-10rem)] lg:max-h-[44rem] lg:self-start">
+        <div
+          class:list={[
+            "lg:sticky lg:top-32 lg:self-start",
+            single
+              ? "lg:h-[28rem]"
+              : "lg:h-[calc(100vh-10rem)] lg:max-h-[44rem]",
+          ]}
+        >
           <div
             id="locations-map"
             role="application"
@@ -289,6 +287,19 @@ const icons = {
     const L = window.L;
     const FIT = { padding: [56, 56], maxZoom: 12 };
     const bounds = () => L.latLngBounds(locations.map((o) => o.coords));
+
+    // Fitting bounds to a single point lands on FIT.maxZoom, which is a whole
+    // country's worth of context for one branch — frame that case by hand.
+    const SOLO_ZOOM = 14;
+    const frameAll = (animate) => {
+      if (locations.length === 1) {
+        if (animate) map.flyTo(locations[0].coords, SOLO_ZOOM, { duration: 0.6 });
+        else map.setView(locations[0].coords, SOLO_ZOOM);
+        return;
+      }
+      if (animate) map.flyToBounds(bounds(), { ...FIT, duration: 0.6 });
+      else map.fitBounds(bounds(), FIT);
+    };
 
     // Teardrop pin; turns teal while its card is the active one.
     const pinIcon = (active) =>
@@ -379,7 +390,7 @@ const icons = {
       paint();
 
       if (activeId === null) {
-        map.flyToBounds(bounds(), { ...FIT, duration: 0.6 });
+        frameAll(true);
         return;
       }
       const office = locations.find((o) => o.id === activeId);
@@ -401,7 +412,7 @@ const icons = {
       markers[o.id] = marker;
     });
 
-    map.fitBounds(bounds(), FIT);
+    frameAll(false);
 
     cards.forEach((card) => {
       const btn = card.querySelector(".office-toggle");
@@ -410,7 +421,7 @@ const icons = {
     resetBtn?.addEventListener("click", () => {
       activeId = null;
       paint();
-      map.flyToBounds(bounds(), { ...FIT, duration: 0.6 });
+      frameAll(true);
     });
 
     // Wheel-scrolling the page shouldn't zoom the map until it's been clicked.
@@ -424,7 +435,7 @@ const icons = {
       map.invalidateSize({ animate: false });
       if (!fitted && container.clientHeight > 0) {
         fitted = true;
-        if (activeId === null) map.fitBounds(bounds(), FIT);
+        if (activeId === null) frameAll(false);
       }
     }).observe(container);
 
