@@ -325,10 +325,13 @@ const icons = {
     <a href="${o.mapHref}" target="_blank" rel="noreferrer"
        class="text-[12px] font-semibold text-brand-500 underline underline-offset-2">Get directions</a>`;
 
+    // No attribution control: the map should read as part of the page rather
+    // than as a third-party embed. The tile layers below still carry their
+    // attribution strings, so restoring the control is a one-word change.
     const map = L.map(container, {
       scrollWheelZoom: false,
       zoomControl: true,
-      attributionControl: true,
+      attributionControl: false,
     });
 
     const carto = L.tileLayer(
